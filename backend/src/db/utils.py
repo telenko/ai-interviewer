@@ -1,4 +1,5 @@
 import json
+import re
 from decimal import Decimal
 import os
 
@@ -56,3 +57,9 @@ def get_queue_url():
     url = os.environ['QUEUE_URL']
     print("Using SQS URL", url)
     return url
+
+def extract_vacancy_sk(text):
+    match = re.search(r"(VACANCY#[\w-]+)", text)
+    if match:
+        return match.group(1)
+    return None

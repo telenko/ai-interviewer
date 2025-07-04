@@ -1,7 +1,21 @@
+from enum import Enum
 from typing import Optional, List
 import uuid
 from pydantic import BaseModel, ConfigDict
 
+class EntityType(Enum):
+    VACANCY = 'vacancy'
+    QUESTION = 'question'
+
+    @staticmethod
+    def from_str(label: str):
+        label = label.lower()
+        if label == 'vacancy':
+            return EntityType.VACANCY
+        elif label == 'question':
+            return EntityType.QUESTION
+        else:
+            raise ValueError(f"Unknown operation: {label}")
 
 class BaseDynamoModel(BaseModel):
     model_config = ConfigDict(extra="forbid")
@@ -17,6 +31,7 @@ class Vacancy(BaseDynamoModel):
     skills: List[str]
     url: Optional[str] = None
     progress: float = 0.0
+    type: str
 
 
 def build_vacancy(
@@ -30,6 +45,7 @@ def build_vacancy(
         skills=skills,
         url=url,
         progress=0.0,
+        type=EntityType.VACANCY.value
     )
 
 
@@ -40,7 +56,7 @@ class Question(BaseDynamoModel):
     answer: Optional[str] = None
     correctness_score: float = 0.0
     order: Optional[int] = 0
-
+    type: str
 
 def build_question(
     user_id: str, vacancy_SK: str, question_text: str, order: int
@@ -48,11 +64,12 @@ def build_question(
     question_id = str(uuid.uuid4())
     return Question(
         PK=f"USER#{user_id}",
-        SK=f"{vacancy_SK}#QUESTION#{question_id}",
+        SK=f"QUESTION#{question_id}#{vacancy_SK}",
         question=question_text,
         answer=None,
         correctness_score=0.0,
         order=order,
+        type=EntityType.QUESTION.value
     )
 
 
