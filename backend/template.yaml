@@ -1,0 +1,98 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: API for AI Interviewer App
+
+Globals:
+  Function:
+    Timeout: 360
+    Runtime: python3.11
+    MemorySize: 512
+
+Parameters:
+  OpenAIApiKey:
+    Type: String
+    NoEcho: true
+
+Resources:
+
+  InterviewerHttpApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      Name: Interviewer API
+
+  InterviewerHttpApiStage:
+    Type: AWS::ApiGatewayV2::Stage
+    Properties:
+      ApiId: !Ref InterviewerHttpApi
+      StageName: prod
+      AutoDeploy: true
+
+  VacancyQuestionsQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: VacancyQuestionsQueue
+      VisibilityTimeout: 800  # або трохи більше, ніж timeout лямбди
+
+  InterviewerTable:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: Retain
+    Properties:
+      TableName: VacancySessionsTable
+      AttributeDefinitions:
+        - AttributeName: PK
+          AttributeType: S
+        - AttributeName: SK
+          AttributeType: S
+      KeySchema:
+        - AttributeName: PK
+          KeyType: HASH
+        - AttributeName: SK
+          KeyType: RANGE
+      BillingMode: PAY_PER_REQUEST
+
+  InterviewerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: InterviewerFunctionDynamoDB
+      Handler: lambda_function.lambda_handler
+      CodeUri: .
+      Environment:
+        Variables:
+          TABLE_NAME: VacancySessionsTable
+          OPENAI_API_KEY: !Ref OpenAIApiKey
+          QUEUE_NAME: !GetAtt VacancyQuestionsQueue.QueueName
+          QUEUE_URL: !Ref VacancyQuestionsQueue
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: VacancySessionsTable
+        - SQSSendMessagePolicy:
+            QueueName: !GetAtt VacancyQuestionsQueue.QueueName
+      Events:
+        InterviewerApi:
+          Type: HttpApi
+          Properties:
+            Path: /vacancy-session
+            Method: POST
+
+  GenerateQuestionsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: GenerateQuestionsFunction
+      Handler: lambda_generate_questions.lambda_handler
+      CodeUri: .
+      Environment:
+        Variables:
+          TABLE_NAME: VacancySessionsTable
+          OPENAI_API_KEY: !Ref OpenAIApiKey
+          QUEUE_NAME: !GetAtt VacancyQuestionsQueue.QueueName
+          QUEUE_URL: !Ref VacancyQuestionsQueue
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: VacancySessionsTable
+        - SQSPollerPolicy:
+            QueueName: VacancyQuestionsQueue
+      Events:
+        SQSTrigger:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt VacancyQuestionsQueue.Arn
