@@ -39,14 +39,3 @@ def analyze_vacancy(vacancy: Vacancy) -> Optional[AnalyzeVacancyOutput]:
     print(f"⏱ GPT response time: {duration:.2f} seconds")
     return response.choices[0].message.parsed
 
-
-# TODO LIST
-# 0. [DONE] add&test 'echo' operation
-# 1. [DONE] Apply changes to models and test
-# 1.1. [DONE] add "order" to Question entity (for LLM as well)
-# 2. [DONE] Integrate with SQS and new lambda
-# 2.1. [DONE] prod fix for SQS (possibly Dynamo?)
-# 3. [DONE] Try deploying to AWS + benchmark
-# 4. [DONE] Make /answer endpoint
-# 4.1 [DONE] Add github and repo to it
-# 5. do add 'type' property and fix get_vacancies endpoint + all others

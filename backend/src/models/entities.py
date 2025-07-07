@@ -32,7 +32,7 @@ class Vacancy(BaseDynamoModel):
     url: Optional[str] = None
     progress: float = 0.0
     type: str
-
+    score: float
 
 def build_vacancy(
     user_id: str, title: str, skills: List[str], url: Optional[str] = None
@@ -45,7 +45,8 @@ def build_vacancy(
         skills=skills,
         url=url,
         progress=0.0,
-        type=EntityType.VACANCY.value
+        type=EntityType.VACANCY.value,
+        score=0.0
     )
 
 
@@ -63,8 +64,8 @@ def build_question(
 ) -> Question:
     question_id = str(uuid.uuid4())
     return Question(
-        PK=f"USER#{user_id}",
-        SK=f"QUESTION#{question_id}#{vacancy_SK}",
+        PK=f"USER#{user_id}#{vacancy_SK}",
+        SK=f"QUESTION#{question_id}",
         question=question_text,
         answer=None,
         correctness_score=0.0,

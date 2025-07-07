@@ -6,6 +6,7 @@ class Operation(Enum):
     ANSWER_QUESTION = auto()
     GET_QUESTIONS = auto()
     EXPLAIN = auto()
+    GENERATE_VACANCY = auto()
     ECHO = auto()
 
     @staticmethod
@@ -21,5 +22,9 @@ class Operation(Enum):
             return Operation.GET_QUESTIONS
         elif label == 'echo':
             return Operation.ECHO
+        elif label == 'explain':
+            return Operation.EXPLAIN
+        elif label == 'generate_vacancy':
+            return Operation.GENERATE_VACANCY
         else:
             raise ValueError(f"Unknown operation: {label}")
