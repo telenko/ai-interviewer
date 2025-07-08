@@ -2,10 +2,10 @@ version = 0.1
 
 [default.deploy.parameters]
 stack_name = "interviewer-app"
-resolve_s3 = true
+s3_bucket = "ai-interviewer-telenko-backend"
 s3_prefix = "interviewer-app"
 region = "eu-central-1"
-confirm_changeset = true
+confirm_changeset = false
 capabilities = "CAPABILITY_IAM"
-disable_rollback = true
+disable_rollback = false
 image_repositories = []

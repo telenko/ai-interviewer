@@ -23,7 +23,7 @@ export default defineConfig({
     proxy: {
       // Proxy /api requests to backend server
       '/vacancy-session': {
-        target: 'https://04t4kkeiff.execute-api.eu-central-1.amazonaws.com',
+        target: 'https://4y464pdfq7.execute-api.eu-central-1.amazonaws.com',
         changeOrigin: true,
         secure: false,
       }

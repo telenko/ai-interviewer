@@ -19,13 +19,16 @@ Resources:
     Type: AWS::Serverless::HttpApi
     Properties:
       Name: Interviewer API
-
-  InterviewerHttpApiStage:
-    Type: AWS::ApiGatewayV2::Stage
-    Properties:
-      ApiId: !Ref InterviewerHttpApi
-      StageName: prod
-      AutoDeploy: true
+      CorsConfiguration:
+        AllowMethods:
+          - GET
+          - POST
+          - OPTIONS
+        AllowHeaders:
+          - Content-Type
+          - Authorization
+        AllowOrigins:
+          - https://d3b5hameri9hon.cloudfront.net
 
   VacancyQuestionsQueue:
     Type: AWS::SQS::Queue
@@ -73,6 +76,7 @@ Resources:
           Properties:
             Path: /vacancy-session
             Method: POST
+            ApiId: !Ref InterviewerHttpApi
 
   GenerateQuestionsFunction:
     Type: AWS::Serverless::Function
