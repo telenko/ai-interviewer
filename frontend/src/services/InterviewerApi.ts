@@ -1,11 +1,11 @@
 import axios from "axios";
 
-const BASE_API = import.meta.env.VITE_BACKEND_URL
+export const BASE_API_URL = import.meta.env.VITE_BACKEND_URL
 
-console.log("BASE API", BASE_API);
+console.log("BASE_API_URL", BASE_API_URL);
 
 const InterviewerApi = axios.create({
-    baseURL: BASE_API,
+    baseURL: BASE_API_URL,
 });
 
 export default InterviewerApi;
