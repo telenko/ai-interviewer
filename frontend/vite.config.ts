@@ -1,9 +1,24 @@
 import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react-swc'
+import viteReact from '@vitejs/plugin-react'
+import tanstackRouter from '@tanstack/router-plugin/vite'
+import tailwindcss from '@tailwindcss/vite'
+// @ts-ignore
+import { resolve } from 'node:path'
 
-// https://vite.dev/config/
+// https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [tanstackRouter({ autoCodeSplitting: true }), viteReact(), tailwindcss()],
+  // @ts-ignore
+  test: {
+    globals: true,
+    environment: 'jsdom',
+  },
+  resolve: {
+    alias: {
+      // @ts-ignore
+      '@': resolve(__dirname, './src'),
+    },
+  },
   server: {
     proxy: {
       // Proxy /api requests to backend server
@@ -11,7 +26,6 @@ export default defineConfig({
         target: 'https://04t4kkeiff.execute-api.eu-central-1.amazonaws.com',
         changeOrigin: true,
         secure: false,
-        // rewrite: (path) => path.replace(/^\/vacancy-session/, '') // optional: remove /api prefix
       }
     }
   }
