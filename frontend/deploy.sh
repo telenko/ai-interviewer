@@ -32,9 +32,9 @@ if [ -z "$DISTRIBUTION_ID" ]; then
   echo "✅ Found Distribution ID: $DISTRIBUTION_ID"
 fi
 
-# === Заливка build в S3
-echo "🚀 Uploading build to S3: $BUCKET_NAME ..."
-aws s3 sync build/ "s3://$BUCKET_NAME" --delete
+# === Заливка dist в S3
+echo "🚀 Uploading dist to S3: $BUCKET_NAME ..."
+aws s3 sync dist/ "s3://$BUCKET_NAME" --delete
 
 # === Інвалідація кешу CloudFront
 echo "🧹 Invalidating CloudFront cache..."

@@ -1,26 +1,29 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useEffect } from 'react'
+import './App.css'
+import { Route, Routes } from 'react-router'
+import InterviewerApi from './services/InterviewerApi'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Hey from the future AI-Interviewer application!
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const TestOne = () => <div>One</div>
+const TestTwo = () => {
+  useEffect(() => {
+    InterviewerApi.post('/vacancy-session', {
+      "operation": "get_vacancies",
+      "payload": {}
+    }).then(console.log)
+  }, []);
+  return <div>Two</div>
 }
 
-export default App;
+function App() {
+
+  return (
+    <>
+      <Routes>
+        <Route path="/" element={<TestOne />} />
+        <Route path="/about" element={<TestTwo />} />
+      </Routes>
+    </>
+  )
+}
+
+export default App
