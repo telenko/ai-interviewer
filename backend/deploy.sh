@@ -15,6 +15,6 @@ if [ -z "$OPENAI_API_KEY" ]; then
 fi
 
 # Деплой
-sam deploy \
+sam.cmd deploy \
   --region eu-central-1 \
   --parameter-overrides OpenAIApiKey="$OPENAI_API_KEY"

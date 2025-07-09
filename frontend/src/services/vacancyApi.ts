@@ -18,9 +18,22 @@ export const vacancyApi = createApi({
             }),
             transformResponse: (response: { vacancies: Vacancy[] }) => response.vacancies
         }),
+        getVacancyBySK: builder.query<Vacancy, {vacancySK: string}>({
+            query: (payload) => ({
+                url: 'vacancy-session',
+                method: 'POST',
+                body: {
+                    "operation": "get_vacancy",
+                    "payload": {
+                        "vacancy_SK": payload.vacancySK
+                    }
+                }
+            }),
+            transformResponse: (response: { vacancy: Vacancy }) => response.vacancy
+        }),
     }),
 })
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useGetVacanciesQuery } = vacancyApi
+export const { useGetVacanciesQuery, useGetVacancyBySKQuery } = vacancyApi

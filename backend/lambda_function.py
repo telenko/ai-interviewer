@@ -1,5 +1,6 @@
 import json
 
+from src.operations.get_vacancy import get_vacancy
 from src.operations import explain_op, generate_vacancy_op
 from src.db.utils import TABLE
 from src.operations.enums import Operation
@@ -28,6 +29,8 @@ def lambda_handler(event, context):
             result = create_vacancy.create_vacancy(TABLE, payload)
         elif operation == Operation.GET_VACANCIES:
             result = get_vacancies.get_vacancies(TABLE, payload)
+        elif operation == Operation.GET_VACANCY:
+            result = get_vacancy(TABLE, payload)
         elif operation == Operation.ANSWER_QUESTION:
             result = answer_question.answer_question(TABLE, payload)
         elif operation == Operation.GET_QUESTIONS:
