@@ -1,0 +1,16 @@
+@tailwind components;
+
+@layer components {
+  .responsive-grid {
+    display: grid;
+    gap: 1rem;
+    place-content: start;
+    grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
+  }
+
+  @media (min-width: 640px) {
+    .responsive-grid {
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    }
+  }
+}

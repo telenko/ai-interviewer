@@ -13,4 +13,5 @@ export type Question = {
     SK: string;
     question: string;
     answer?: string;
+    order: number;
 }

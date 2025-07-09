@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label"
 import type { Vacancy } from '@/models/entities'
 import { Link } from "@tanstack/react-router"
 import { DeleteIcon } from "lucide-react"
+import './styles.css'
 
 export default function VacancyCard({ vacancy }: { vacancy: Vacancy }) {
     const badgeSuccessClass = "bg-green-500 text-white dark:bg-green-600";
