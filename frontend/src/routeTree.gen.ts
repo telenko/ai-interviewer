@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as VacanciesRouteImport } from './routes/vacancies'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as InterviewVacancySKRouteImport } from './routes/interview.$vacancySK'
 
 const VacanciesRoute = VacanciesRouteImport.update({
   id: '/vacancies',
@@ -28,35 +29,44 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const InterviewVacancySKRoute = InterviewVacancySKRouteImport.update({
+  id: '/interview/$vacancySK',
+  path: '/interview/$vacancySK',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/vacancies': typeof VacanciesRoute
+  '/interview/$vacancySK': typeof InterviewVacancySKRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/vacancies': typeof VacanciesRoute
+  '/interview/$vacancySK': typeof InterviewVacancySKRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/vacancies': typeof VacanciesRoute
+  '/interview/$vacancySK': typeof InterviewVacancySKRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/vacancies'
+  fullPaths: '/' | '/about' | '/vacancies' | '/interview/$vacancySK'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/vacancies'
-  id: '__root__' | '/' | '/about' | '/vacancies'
+  to: '/' | '/about' | '/vacancies' | '/interview/$vacancySK'
+  id: '__root__' | '/' | '/about' | '/vacancies' | '/interview/$vacancySK'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   VacanciesRoute: typeof VacanciesRoute
+  InterviewVacancySKRoute: typeof InterviewVacancySKRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -82,6 +92,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/interview/$vacancySK': {
+      id: '/interview/$vacancySK'
+      path: '/interview/$vacancySK'
+      fullPath: '/interview/$vacancySK'
+      preLoaderRoute: typeof InterviewVacancySKRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -89,6 +106,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   VacanciesRoute: VacanciesRoute,
+  InterviewVacancySKRoute: InterviewVacancySKRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

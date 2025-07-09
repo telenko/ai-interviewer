@@ -1,12 +1,16 @@
+import { questionApi } from '@/services/questionApi'
 import { vacancyApi } from '@/services/vacancyApi'
 import { configureStore } from '@reduxjs/toolkit'
 
 export const store = configureStore({
     reducer: {
-        [vacancyApi.reducerPath]: vacancyApi.reducer
+        [vacancyApi.reducerPath]: vacancyApi.reducer,
+        [questionApi.reducerPath]: questionApi.reducer
     },
     middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware().concat(vacancyApi.middleware)
+        getDefaultMiddleware()
+            .concat(vacancyApi.middleware)
+            .concat(questionApi.middleware)
 })
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

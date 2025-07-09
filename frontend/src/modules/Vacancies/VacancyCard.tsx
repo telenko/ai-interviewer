@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import type { Vacancy } from '@/models/entities'
+import { Link } from "@tanstack/react-router"
 import { DeleteIcon } from "lucide-react"
 
 export default function VacancyCard({ vacancy }: { vacancy: Vacancy }) {
@@ -20,8 +21,8 @@ export default function VacancyCard({ vacancy }: { vacancy: Vacancy }) {
     return (
         <Card className="w-full max-w-sm">
             <CardHeader>
-                <CardTitle>{vacancy.title}</CardTitle>
-                <CardDescription>
+                <CardTitle className="line-clamp-1">{vacancy.title}</CardTitle>
+                <CardDescription className="line-clamp-2">
                     {vacancy.skills.slice(0, 5).join(', ')}
                 </CardDescription>
                 <CardAction>
@@ -47,9 +48,11 @@ export default function VacancyCard({ vacancy }: { vacancy: Vacancy }) {
                 </form>
             </CardContent>
             <CardFooter className="flex-col gap-2">
-                <Button type="submit" className="w-full">
-                    Continue
-                </Button>
+                <Link to="/interview/$vacancySK" params={{ vacancySK: vacancy.SK }} className="w-full">
+                    <Button type="submit" className="w-full">
+                        Continue
+                    </Button>
+                </Link>
             </CardFooter>
         </Card>
     )
