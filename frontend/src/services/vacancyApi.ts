@@ -1,11 +1,12 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { BASE_API_URL } from './InterviewerApi'
-import type { Vacancy } from '@/models/entities'
+import type { Question, Vacancy } from '@/models/entities'
 
 // Define a service using a base URL and expected endpoints
 export const vacancyApi = createApi({
-    reducerPath: 'vacancy',
+    reducerPath: 'vacancyAPI',
     baseQuery: fetchBaseQuery({ baseUrl: BASE_API_URL }),
+    tagTypes: ['Vacancy', 'VacancyList', 'VacancyQuestions'],
     endpoints: (builder) => ({
         getVacancies: builder.query<Vacancy[], void>({
             query: () => ({
@@ -16,9 +17,10 @@ export const vacancyApi = createApi({
                     "payload": {}
                 }
             }),
-            transformResponse: (response: { vacancies: Vacancy[] }) => response.vacancies
+            transformResponse: (response: { vacancies: Vacancy[] }) => response.vacancies,
+            providesTags: ['VacancyList'],
         }),
-        getVacancyBySK: builder.query<Vacancy, {vacancySK: string}>({
+        getVacancyBySK: builder.query<Vacancy, { vacancySK: string }>({
             query: (payload) => ({
                 url: 'vacancy-session',
                 method: 'POST',
@@ -29,11 +31,47 @@ export const vacancyApi = createApi({
                     }
                 }
             }),
-            transformResponse: (response: { vacancy: Vacancy }) => response.vacancy
+            transformResponse: (response: { vacancy: Vacancy }) => response.vacancy,
+            providesTags: (result) =>
+                result ? [{ type: 'Vacancy', id: result.SK }] : [],
         }),
+        getQuestions: builder.query<Question[], { vacancySK: string }>({
+            query: (payload) => ({
+                url: 'vacancy-session',
+                method: 'POST',
+                body: {
+                    "operation": "get_questions",
+                    "payload": {
+                        "vacancy_SK": payload.vacancySK
+                    }
+                }
+            }),
+            transformResponse: (response: { questions: Question[] }) => response.questions,
+            providesTags: (result, error, payload) =>
+                result ? [{ type: 'VacancyQuestions', id: payload.vacancySK }] : [],
+        }),
+        answerQuestion: builder.mutation<void, { vacancySK: string, questionSK: string, answer: string }>({
+            query: payload => ({
+                url: 'vacancy-session',
+                method: 'POST',
+                body: {
+                    "operation": "answer_question",
+                    "payload": {
+                        "vacancy_SK": payload.vacancySK,
+                        "question_SK": payload.questionSK,
+                        "answer": payload.answer
+                    }
+                }
+            }),
+            invalidatesTags: (result, error, arg) => [
+                { type: 'VacancyQuestions', id: arg.vacancySK }, // оновлення питань
+                { type: 'Vacancy', id: arg.vacancySK },          // оновлення однієї вакансії
+                'VacancyList',                                   // оновлення списку вакансій
+            ],
+        })
     }),
 })
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useGetVacanciesQuery, useGetVacancyBySKQuery } = vacancyApi
+export const { useGetVacanciesQuery, useGetVacancyBySKQuery, useAnswerQuestionMutation, useGetQuestionsQuery } = vacancyApi

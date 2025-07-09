@@ -14,4 +14,5 @@ export type Question = {
     question: string;
     answer?: string;
     order: number;
+    correctness_score?: number;
 }

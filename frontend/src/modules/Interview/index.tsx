@@ -1,12 +1,14 @@
-import { useGetQuestionsQuery } from "@/services/questionApi";
 import { useEffect, useMemo, useState } from "react";
 import QuestionPanel from "./QuestionPanel";
+import { useGetVacancyBySKQuery, useGetQuestionsQuery, useAnswerQuestionMutation } from "@/services/vacancyApi";
 
 export default function Interview({ vacancySK }: { vacancySK: string }) {
 
     const [activeQuestionIdx, setActiveQuestionIdx] = useState<number>(-1);
 
-    const { data: questions } = useGetQuestionsQuery({ vacancy_SK: vacancySK });
+    const { data: questions } = useGetQuestionsQuery({ vacancySK: vacancySK });
+    const { data: vacancy } = useGetVacancyBySKQuery({ vacancySK: vacancySK });
+    const [answerQuestion] = useAnswerQuestionMutation();
 
     const sortedQuestions = useMemo(() => questions ? [...questions].sort((qA, qB) => qB.order - qA.order) : [], [questions]);
 
@@ -27,13 +29,16 @@ export default function Interview({ vacancySK }: { vacancySK: string }) {
 
     const activeQuestion = sortedQuestions[activeQuestionIdx];
 
-    if (!activeQuestion) { return null; }
+    if (!activeQuestion || !vacancy) { return null; }
 
     return <QuestionPanel
+        vacancy={vacancy}
         question={activeQuestion}
         disableNext={activeQuestionIdx === sortedQuestions.length - 1}
         disablePrev={activeQuestionIdx === 0}
-        onAnswer={() => { }}
+        onAnswer={(answer) => {
+            answerQuestion({ answer, questionSK: activeQuestion.SK, vacancySK })
+        }}
         onExplain={() => { }}
         onNext={() => {
             setActiveQuestionIdx(Math.min(activeQuestionIdx + 1, sortedQuestions.length - 1))
