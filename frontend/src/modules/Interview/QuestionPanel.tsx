@@ -1,11 +1,12 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
-import { LightbulbIcon, Loader2Icon } from 'lucide-react';
+import { ArrowLeft, ChevronLeft, ChevronRight, LightbulbIcon, Loader2Icon } from 'lucide-react';
 import type { Question, Vacancy } from '@/models/entities';
 import { useEffect, useState } from 'react';
 import { Link } from '@tanstack/react-router';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useTranslation } from 'react-i18next';
 
 export default function QuestionPanel({
   vacancy,
@@ -40,14 +41,18 @@ export default function QuestionPanel({
   useEffect(() => {
     setAnswer(question?.answer ?? '');
   }, [question]);
+  const { t } = useTranslation();
   return (
     <div className="max-w-2xl mx-auto p-4 flex flex-col gap-6 min-h-screen">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+      <div className="flex flex-nowrap items-center sm:flex-row sm:items-center sm:justify-between gap-2">
         <Link
           to="/vacancies"
-          className="text-sm text-indigo-600 hover:underline flex items-center gap-1"
+          className="sm:text-sm text-2xl text-indigo-600 hover:underline flex items-center gap-1"
         >
-          ← Назад до вакансій
+          <span className="hidden sm:block">← {t('backToVacancies')}</span>
+          <Button variant="outline" className="flex items-center gap-1 sm:hidden">
+            <ArrowLeft className="w-5 h-5" />
+          </Button>
         </Link>
 
         {/* --- Назва ролі вакансії --- */}
@@ -56,6 +61,7 @@ export default function QuestionPanel({
             {vacancy.title}
           </h3>
         )}
+        {!vacancy || vacancyLoading ? <Skeleton className="h-[28px] w-[163px]" /> : null}
       </div>
 
       {/* --- Верхній інфо-блок --- */}
@@ -66,10 +72,11 @@ export default function QuestionPanel({
           ) : (
             <>
               <div>
-                <span className="font-medium">Прогрес:</span> {(vacancy.progress * 100).toFixed(1)}%
+                <span className="font-medium">{t('progress_colon')}</span>{' '}
+                {(vacancy.progress * 100).toFixed(1)}%
               </div>
               <div>
-                <span className="font-medium">Загальний скор:</span>{' '}
+                <span className="font-medium">{t('total_score_colon')}</span>{' '}
                 {(vacancy.score * 100).toFixed(1)}
                 /100
               </div>
@@ -80,7 +87,7 @@ export default function QuestionPanel({
           <Skeleton className="h-[20px] w-[163px]" />
         ) : (
           <div className="text-sm text-indigo-700 font-semibold">
-            Оцінка за це питання:{' '}
+            {t('score_for_question_colon')}{' '}
             {question.correctness_score ? (question.correctness_score * 100).toFixed(1) : '—'}
           </div>
         )}
@@ -89,16 +96,17 @@ export default function QuestionPanel({
       {/* --- Питання --- */}
       <Card className="bg-gradient-to-r from-indigo-100 to-indigo-200 shadow-md rounded-2xl">
         <CardHeader className="text-lg font-semibold text-indigo-900">
-          {!questionLoading && question ? question?.question : 'Почекай хвильку...'}
+          {!questionLoading && question ? question?.question : t('pls_wait_a_sec')}
         </CardHeader>
       </Card>
 
       {/* --- Текстарія --- */}
       <Textarea
-        placeholder="Введіть вашу відповідь..."
+        placeholder={t('enter_answer')}
         className="min-h-[200px] resize-none flex-grow"
         value={answer}
         onChange={(e) => setAnswer(e.target.value)}
+        maxLength={300}
       />
 
       {/* --- Пояснення --- */}
@@ -106,40 +114,42 @@ export default function QuestionPanel({
         <Card className="bg-yellow-50 border border-yellow-300 shadow-sm p-4 relative rounded-2xl">
           <div className="flex items-center mb-2 text-yellow-800 font-semibold text-sm">
             <LightbulbIcon className="h-4 w-4 mr-2" />
-            Порада від AI
+            {t('explanation_AI')}
           </div>
           <button
             onClick={() => navigator.clipboard.writeText(explanation)}
             className="absolute top-2 right-2 text-xs text-yellow-600 hover:text-yellow-800"
           >
-            Копіювати
+            {t('copy')}
           </button>
           <div className="whitespace-pre-wrap text-sm text-yellow-900">{explanation}</div>
         </Card>
       )}
 
       {/* --- Кнопки --- */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-auto">
+      <div className="flex justify-between flex-nowrap gap-4 sm:grid sm:grid-cols-4 sm:gap-4 mt-auto">
         <Button
           variant="secondary"
           onClick={onExplain}
           disabled={explanationLoading || questionLoading || !!explanation}
         >
           {explanationLoading ? <Loader2Icon className="animate-spin" /> : null}
-          Поясни
+          {t('explain')}
         </Button>
         <Button
           onClick={() => onAnswer(answer)}
           disabled={answerLoading || answer === question?.answer || !answer || questionLoading}
         >
           {answerLoading ? <Loader2Icon className="animate-spin" /> : null}
-          Відповісти
+          {t('answer')}
         </Button>
         <Button variant="outline" onClick={onPrev} disabled={disablePrev}>
-          Назад
+          <ChevronLeft className="sm:hidden w-4 h-4" />
+          <span className="hidden sm:block">{t('back')}</span>
         </Button>
         <Button variant="outline" onClick={onNext} disabled={disableNext}>
-          Вперед
+          <ChevronRight className="sm:hidden w-4 h-4" />
+          <span className="hidden sm:block">{t('forward')}</span>
         </Button>
       </div>
     </div>

@@ -25,9 +25,11 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { useRemoveVacancyMutation } from '@/services/vacancyApi';
+import { useTranslation } from 'react-i18next';
 
 export default function VacancyCard({ vacancy }: { vacancy: Vacancy }) {
   const [removeVacancy, { isLoading: vacancyRemoving }] = useRemoveVacancyMutation();
+  const { t } = useTranslation();
   const handleDelete = () => {
     removeVacancy({ vacancySK: vacancy.SK });
   };
@@ -55,11 +57,11 @@ export default function VacancyCard({ vacancy }: { vacancy: Vacancy }) {
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Ви впевнені, що хочете видалити вакансію?</AlertDialogTitle>
+                <AlertDialogTitle>{t('removeVacancyWarn')}</AlertDialogTitle>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>Скасувати</AlertDialogCancel>
-                <AlertDialogAction onClick={handleDelete}>Видалити</AlertDialogAction>
+                <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
+                <AlertDialogAction onClick={handleDelete}>{t('remove')}</AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
@@ -69,7 +71,7 @@ export default function VacancyCard({ vacancy }: { vacancy: Vacancy }) {
         <form>
           <div className="flex flex-col gap-6">
             <div className="flex gap-2">
-              <Label>Progress: </Label>
+              <Label>{t('progress_colon')}</Label>
               <Badge
                 className={
                   vacancy.progress > 0.6
@@ -84,7 +86,7 @@ export default function VacancyCard({ vacancy }: { vacancy: Vacancy }) {
               </Badge>
             </div>
             <div className="flex gap-2">
-              <Label>Score: </Label>
+              <Label>{t('score_colon')}</Label>
               <Badge
                 className={
                   vacancy.score > 0.6
@@ -104,7 +106,7 @@ export default function VacancyCard({ vacancy }: { vacancy: Vacancy }) {
       <CardFooter className="flex-col gap-2">
         <Link to="/interview/$vacancySK" params={{ vacancySK: vacancy.SK }} className="w-full">
           <Button type="submit" className="w-full">
-            Continue
+            {t('continue')}
           </Button>
         </Link>
       </CardFooter>

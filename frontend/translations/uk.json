@@ -1,0 +1,28 @@
+{
+    "translation": {
+        "backToVacancies": "Назад до вакансій",
+        "progress_colon": "Прогрес:",
+        "total_score_colon": "Загальний бал:",
+        "score_colon": "Бал:",
+        "score_for_question_colon": "Оцінка за це питання:",
+        "pls_wait_a_sec": "Почекай хвильку...",
+        "enter_answer": "Введіть вашу відповідь...",
+        "explanation_AI": "Порада від AI",
+        "copy": "Копіювати",
+        "explain": "Поясни",
+        "answer": "Відповісти",
+        "back": "Назад",
+        "forward": "Вперед",
+        "removeVacancyWarn": "Ви впевнені, що хочете видалити вакансію?",
+        "cancel": "Скасувати",
+        "remove": "Видалити",
+        "continue": "Продовжити",
+        "new_vacancy": "Нова вакансія",
+        "add_vacancy": "Додати вакансію",
+        "gentle_url_placeh": "Встав URL вакансії :) Так буде швидше!!",
+        "generate": "Згенерувати",
+        "vacancy_name": "Назва вакансії",
+        "enter_skills": "Введіть скіл...",
+        "save": "Зберегти"
+    }
+}

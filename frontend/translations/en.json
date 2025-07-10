@@ -1,0 +1,28 @@
+{
+    "translation": {
+        "backToVacancies": "Back to vacancies",
+        "progress_colon": "Progress:",
+        "total_score_colon": "Total score:",
+        "score_colon": "Score:",
+        "score_for_question_colon": "Score for this question:",
+        "pls_wait_a_sec": "Pls wait a sec...",
+        "enter_answer": "Enter your answer...",
+        "explanation_AI": "Suggestion from AI",
+        "copy": "Copy",
+        "explain": "Explain",
+        "answer": "Answer",
+        "back": "Back",
+        "forward": "Next",
+        "removeVacancyWarn": "Are you sure you want to remove the vacancy?",
+        "cancel": "Cancel",
+        "remove": "Remove",
+        "continue": "Continue",
+        "new_vacancy": "New vacancy",
+        "add_vacancy": "Add vacancy",
+        "gentle_url_placeh": "Paste vacancy URL :) Will be faster!!",
+        "generate": "Generate",
+        "vacancy_name": "Vacancy name",
+        "enter_skills": "Enter skill...",
+        "save": "Save"
+    }
+}
