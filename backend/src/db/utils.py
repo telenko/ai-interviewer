@@ -4,7 +4,6 @@ import os
 
 import boto3
 
-SQS = boto3.client('sqs')
 
 def convert_to_dynamo(item_model):
     return json.loads(json.dumps(item_model.to_dynamo()), parse_float=Decimal)
@@ -12,6 +11,7 @@ def convert_to_dynamo(item_model):
 
 def add_item(table, item_model):
     table.put_item(Item=convert_to_dynamo(item_model))
+
 
 def update_entity(table, pk_value, sk_value, update_attrs: dict):
     update_expr = "SET "
@@ -34,25 +34,18 @@ def update_entity(table, pk_value, sk_value, update_attrs: dict):
     update_expr += ", ".join(update_clauses)
 
     response = table.update_item(
-        Key={
-            "PK": pk_value,
-            "SK": sk_value
-        },
+        Key={"PK": pk_value, "SK": sk_value},
         UpdateExpression=update_expr,
         ExpressionAttributeNames=expr_attr_names,
         ExpressionAttributeValues=expr_attr_values,
-        ReturnValues="ALL_NEW"
+        ReturnValues="ALL_NEW",
     )
     return response.get("Attributes")
 
+
 USER_ID = "andrii_t"
 
-table_name = os.environ['TABLE_NAME']
-dynamodb = boto3.resource('dynamodb')
+table_name = os.environ["TABLE_NAME"]
+dynamodb = boto3.resource("dynamodb")
 
 TABLE = dynamodb.Table(table_name)
-
-def get_queue_url():
-    url = os.environ['QUEUE_URL']
-    print("Using SQS URL", url)
-    return url

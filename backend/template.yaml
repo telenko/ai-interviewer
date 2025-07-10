@@ -1,4 +1,4 @@
-AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
 Description: API for AI Interviewer App
 
@@ -14,7 +14,6 @@ Parameters:
     NoEcho: true
 
 Resources:
-
   InterviewerHttpApi:
     Type: AWS::Serverless::HttpApi
     Properties:
@@ -29,12 +28,6 @@ Resources:
           - Authorization
         AllowOrigins:
           - https://d3b5hameri9hon.cloudfront.net
-
-  VacancyQuestionsQueue:
-    Type: AWS::SQS::Queue
-    Properties:
-      QueueName: VacancyQuestionsQueue
-      VisibilityTimeout: 800  # або трохи більше, ніж timeout лямбди
 
   InterviewerTable:
     Type: AWS::DynamoDB::Table
@@ -63,13 +56,15 @@ Resources:
         Variables:
           TABLE_NAME: VacancySessionsTable
           OPENAI_API_KEY: !Ref OpenAIApiKey
-          QUEUE_NAME: !GetAtt VacancyQuestionsQueue.QueueName
-          QUEUE_URL: !Ref VacancyQuestionsQueue
+          GENERATE_QUESTIONS_FUNCTION_NAME: !Ref GenerateQuestionsFunction
       Policies:
         - DynamoDBCrudPolicy:
             TableName: VacancySessionsTable
-        - SQSSendMessagePolicy:
-            QueueName: !GetAtt VacancyQuestionsQueue.QueueName
+        - Statement:
+            Effect: Allow
+            Action:
+              - lambda:InvokeFunction
+            Resource: !GetAtt GenerateQuestionsFunction.Arn
       Events:
         InterviewerApi:
           Type: HttpApi
@@ -88,15 +83,6 @@ Resources:
         Variables:
           TABLE_NAME: VacancySessionsTable
           OPENAI_API_KEY: !Ref OpenAIApiKey
-          QUEUE_NAME: !GetAtt VacancyQuestionsQueue.QueueName
-          QUEUE_URL: !Ref VacancyQuestionsQueue
       Policies:
         - DynamoDBCrudPolicy:
             TableName: VacancySessionsTable
-        - SQSPollerPolicy:
-            QueueName: VacancyQuestionsQueue
-      Events:
-        SQSTrigger:
-          Type: SQS
-          Properties:
-            Queue: !GetAtt VacancyQuestionsQueue.Arn

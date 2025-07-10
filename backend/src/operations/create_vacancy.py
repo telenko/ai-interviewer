@@ -1,18 +1,25 @@
 import json
+import boto3
+import os
 
-from src.db.utils import SQS, USER_ID, add_item, get_queue_url
+from src.db.utils import USER_ID, add_item
 from src.models.entities import build_vacancy
 
-def push_generate_questions_event(user_id: str, vacancy_sk: str):
+lambda_client = boto3.client("lambda")
+
+
+def invoke_generate_questions(user_id: str, vacancy_sk: str):
     message = {
         "type": "generate_questions",
         "user_id": user_id,
-        "vacancy_sk": vacancy_sk
+        "vacancy_sk": vacancy_sk,
     }
-    SQS.send_message(
-        QueueUrl=get_queue_url(),
-        MessageBody=json.dumps(message)
+    lambda_client.invoke(
+        FunctionName=os.environ["GENERATE_QUESTIONS_FUNCTION_NAME"],
+        InvocationType="Event",  # async
+        Payload=json.dumps(message).encode("utf-8"),
     )
+
 
 def create_vacancy(table, payload):
     vacancy = build_vacancy(
@@ -23,11 +30,9 @@ def create_vacancy(table, payload):
     )
     add_item(table, vacancy)
 
-    push_generate_questions_event(USER_ID, vacancy_sk=vacancy.SK)
+    invoke_generate_questions(USER_ID, vacancy_sk=vacancy.SK)
 
     return {
         "message": "Item created",
-        "item": {
-            "vacancy_SK": vacancy.SK
-        },
+        "item": {"vacancy_SK": vacancy.SK},
     }

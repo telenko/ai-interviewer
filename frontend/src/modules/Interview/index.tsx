@@ -14,7 +14,11 @@ export default function Interview({ vacancySK }: { vacancySK: string }) {
   const autoSlideDone = useRef(false);
   const dispatch = useAppDispatch();
 
-  const { data: questions, isLoading: questionsLoading } = useGetQuestionsQuery({
+  const {
+    data: questions = [],
+    isLoading: questionsLoading,
+    refetch,
+  } = useGetQuestionsQuery({
     vacancySK: vacancySK,
   });
   const { data: vacancy, isLoading: vacancyLoading } = useGetVacancyBySKQuery({
@@ -25,6 +29,16 @@ export default function Interview({ vacancySK }: { vacancySK: string }) {
     () => (questions ? [...questions].sort((qA, qB) => qB.order - qA.order) : []),
     [questions],
   );
+
+  useEffect(() => {
+    if (!vacancySK || questions.length > 0 || questionsLoading) return;
+
+    const interval = setInterval(() => {
+      refetch();
+    }, 5000); // кожні 5 секунд
+
+    return () => clearInterval(interval);
+  }, [vacancySK, questions.length, refetch, questionsLoading]);
 
   const activeQuestion: Question | undefined = sortedQuestions[activeQuestionIdx];
 

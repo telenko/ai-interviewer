@@ -42,12 +42,21 @@ export default function QuestionPanel({
   }, [question]);
   return (
     <div className="max-w-2xl mx-auto p-4 flex flex-col gap-6 min-h-screen">
-      <Link
-        to="/vacancies"
-        className="text-sm text-indigo-600 hover:underline flex items-center gap-1"
-      >
-        ← Назад до вакансій
-      </Link>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+        <Link
+          to="/vacancies"
+          className="text-sm text-indigo-600 hover:underline flex items-center gap-1"
+        >
+          ← Назад до вакансій
+        </Link>
+
+        {/* --- Назва ролі вакансії --- */}
+        {vacancy && !vacancyLoading && (
+          <h3 className="text-xl font-semibold text-gray-800 text-center sm:text-left">
+            {vacancy.title}
+          </h3>
+        )}
+      </div>
 
       {/* --- Верхній інфо-блок --- */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
