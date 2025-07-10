@@ -13,4 +13,23 @@
       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     }
   }
+
+  .blink-green-border {
+    border-width: 2px;
+    border-style: solid;
+    border-color: transparent;
+    border-radius: 0.375rem; /* як rounded-md */
+
+    animation: blinkGreen 1.5s linear infinite;
+  }
+
+  @keyframes blinkGreen {
+    0%,
+    100% {
+      border-color: transparent;
+    }
+    50% {
+      border-color: #22c55e; /* Tailwind green-500 */
+    }
+  }
 }

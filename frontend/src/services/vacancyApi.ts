@@ -73,6 +73,29 @@ export const vacancyApi = createApi({
         'VacancyList', // оновлення списку вакансій
       ],
     }),
+    addVacancy: builder.mutation<
+      {
+        item: { vacancy_SK: string };
+      },
+      { title: string; url?: string; skills: string[] }
+    >({
+      query: (payload) => ({
+        url: 'vacancy-session',
+        method: 'POST',
+        body: {
+          operation: 'create_vacancy',
+          payload: {
+            title: payload.title,
+            skills: payload.skills,
+            url: payload.url,
+          },
+        },
+      }),
+      // @ts-ignore
+      invalidatesTags: (result, error, arg) => [
+        'VacancyList', // оновлення списку вакансій
+      ],
+    }),
   }),
 });
 
@@ -83,4 +106,5 @@ export const {
   useGetVacancyBySKQuery,
   useAnswerQuestionMutation,
   useGetQuestionsQuery,
+  useAddVacancyMutation,
 } = vacancyApi;
