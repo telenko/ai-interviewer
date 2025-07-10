@@ -1,49 +1,75 @@
-import { useEffect, useMemo, useState } from "react";
-import QuestionPanel from "./QuestionPanel";
-import { useGetVacancyBySKQuery, useGetQuestionsQuery, useAnswerQuestionMutation } from "@/services/vacancyApi";
+import { useEffect, useMemo, useRef, useState } from 'react';
+import QuestionPanel from './QuestionPanel';
+import {
+  useGetVacancyBySKQuery,
+  useGetQuestionsQuery,
+  useAnswerQuestionMutation,
+} from '@/services/vacancyApi';
+import { fetchExplanation, useExplanation } from '@/store/explanationSlice';
+import { useAppDispatch } from '@/store';
 
 export default function Interview({ vacancySK }: { vacancySK: string }) {
+  const [activeQuestionIdx, setActiveQuestionIdx] = useState<number>(-1);
+  const autoSlideDone = useRef(false);
+  const dispatch = useAppDispatch();
 
-    const [activeQuestionIdx, setActiveQuestionIdx] = useState<number>(-1);
+  const { data: questions } = useGetQuestionsQuery({ vacancySK: vacancySK });
+  const { data: vacancy } = useGetVacancyBySKQuery({ vacancySK: vacancySK });
+  const [answerQuestion, { isLoading: answerLoading }] = useAnswerQuestionMutation();
+  const sortedQuestions = useMemo(
+    () => (questions ? [...questions].sort((qA, qB) => qB.order - qA.order) : []),
+    [questions],
+  );
 
-    const { data: questions } = useGetQuestionsQuery({ vacancySK: vacancySK });
-    const { data: vacancy } = useGetVacancyBySKQuery({ vacancySK: vacancySK });
-    const [answerQuestion] = useAnswerQuestionMutation();
+  const activeQuestion = sortedQuestions[activeQuestionIdx];
 
-    const sortedQuestions = useMemo(() => questions ? [...questions].sort((qA, qB) => qB.order - qA.order) : [], [questions]);
+  const { explanation, loading: explanationLoading } = useExplanation(activeQuestion?.SK);
 
-    useEffect(() => {
-        if (sortedQuestions.length === 0) {
-            setActiveQuestionIdx(-1)
+  useEffect(() => {
+    if (autoSlideDone.current) {
+      return;
+    }
+    if (sortedQuestions.length === 0) {
+      setActiveQuestionIdx(-1);
+      return;
+    }
+    const questionIdx = (() => {
+      for (let i = 0; i < sortedQuestions.length; i++) {
+        if (!sortedQuestions[i].answer) {
+          return i;
         }
-        const questionIdx = (() => {
-            for (let i = 0; i < sortedQuestions.length; i++) {
-                if (!sortedQuestions[i].answer) {
-                    return i;
-                }
-            }
-            return sortedQuestions.length - 1;
-        })();
-        setActiveQuestionIdx(questionIdx);
-    }, [sortedQuestions]);
+      }
+      return sortedQuestions.length - 1;
+    })();
+    setActiveQuestionIdx(questionIdx);
+    autoSlideDone.current = true;
+  }, [sortedQuestions]);
 
-    const activeQuestion = sortedQuestions[activeQuestionIdx];
+  if (!activeQuestion || !vacancy) {
+    return null;
+  }
 
-    if (!activeQuestion || !vacancy) { return null; }
-
-    return <QuestionPanel
-        vacancy={vacancy}
-        question={activeQuestion}
-        disableNext={activeQuestionIdx === sortedQuestions.length - 1}
-        disablePrev={activeQuestionIdx === 0}
-        onAnswer={(answer) => {
-            answerQuestion({ answer, questionSK: activeQuestion.SK, vacancySK })
-        }}
-        onExplain={() => { }}
-        onNext={() => {
-            setActiveQuestionIdx(Math.min(activeQuestionIdx + 1, sortedQuestions.length - 1))
-        }}
-        onPrev={() => {
-            setActiveQuestionIdx(Math.max(activeQuestionIdx - 1, 0))
-        }} />;
+  return (
+    <QuestionPanel
+      vacancy={vacancy}
+      question={activeQuestion}
+      disableNext={activeQuestionIdx === sortedQuestions.length - 1}
+      disablePrev={activeQuestionIdx === 0}
+      answerLoading={answerLoading}
+      explanation={explanation}
+      explanationLoading={explanationLoading}
+      onAnswer={(answer) => {
+        answerQuestion({ answer, questionSK: activeQuestion.SK, vacancySK });
+      }}
+      onExplain={() => {
+        dispatch(fetchExplanation({ questionSK: activeQuestion.SK, vacancySK }));
+      }}
+      onNext={() => {
+        setActiveQuestionIdx(Math.min(activeQuestionIdx + 1, sortedQuestions.length - 1));
+      }}
+      onPrev={() => {
+        setActiveQuestionIdx(Math.max(activeQuestionIdx - 1, 0));
+      }}
+    />
+  );
 }
