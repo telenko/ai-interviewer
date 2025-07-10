@@ -96,6 +96,23 @@ export const vacancyApi = createApi({
         'VacancyList', // оновлення списку вакансій
       ],
     }),
+    removeVacancy: builder.mutation<void, { vacancySK: string }>({
+      query: (payload) => ({
+        url: 'vacancy-session',
+        method: 'POST',
+        body: {
+          operation: 'remove_vacancy',
+          payload: {
+            vacancy_SK: payload.vacancySK,
+          },
+        },
+      }),
+      // @ts-ignore
+      invalidatesTags: (result, error, arg) => [
+        'VacancyList', // оновлення списку вакансій
+        { type: 'VacancyQuestions', id: arg.vacancySK }, // оновлення питань
+      ],
+    }),
   }),
 });
 

@@ -1,5 +1,6 @@
 from enum import Enum, auto
 
+
 class Operation(Enum):
     CREATE_VACANCY = auto()
     GET_VACANCIES = auto()
@@ -8,26 +9,29 @@ class Operation(Enum):
     GET_QUESTIONS = auto()
     EXPLAIN = auto()
     GENERATE_VACANCY = auto()
+    REMOVE_VACANCY = auto()
     ECHO = auto()
 
     @staticmethod
     def from_str(label: str):
         label = label.lower()
-        if label == 'create_vacancy':
+        if label == "create_vacancy":
             return Operation.CREATE_VACANCY
-        elif label == 'get_vacancies':
+        elif label == "get_vacancies":
             return Operation.GET_VACANCIES
-        elif label == 'get_vacancy':
+        elif label == "get_vacancy":
             return Operation.GET_VACANCY
-        elif label == 'answer_question':
+        elif label == "answer_question":
             return Operation.ANSWER_QUESTION
-        elif label == 'get_questions':
+        elif label == "get_questions":
             return Operation.GET_QUESTIONS
-        elif label == 'echo':
+        elif label == "echo":
             return Operation.ECHO
-        elif label == 'explain':
+        elif label == "explain":
             return Operation.EXPLAIN
-        elif label == 'generate_vacancy':
+        elif label == "generate_vacancy":
             return Operation.GENERATE_VACANCY
+        elif label == "remove_vacancy":
+            return Operation.REMOVE_VACANCY
         else:
             raise ValueError(f"Unknown operation: {label}")

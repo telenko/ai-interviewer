@@ -1,5 +1,6 @@
 import json
 
+from src.operations.remove_vacancy import remove_vacancy
 from src.operations.get_vacancy import get_vacancy
 from src.operations import explain_op, generate_vacancy_op
 from src.db.utils import TABLE
@@ -39,6 +40,8 @@ def lambda_handler(event, context):
             result = explain_op.explain_op(TABLE, payload)
         elif operation == Operation.GENERATE_VACANCY:
             result = generate_vacancy_op.generate_vacancy_op(TABLE, payload)
+        elif operation == Operation.REMOVE_VACANCY:
+            result = remove_vacancy(TABLE, payload)
         elif operation == Operation.ECHO:
             return {"statusCode": 200, "body": "Hello from Lambda :)"}
 

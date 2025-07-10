@@ -7,21 +7,26 @@ import {
 } from '@/services/vacancyApi';
 import { fetchExplanation, useExplanation } from '@/store/explanationSlice';
 import { useAppDispatch } from '@/store';
+import type { Question } from '@/models/entities';
 
 export default function Interview({ vacancySK }: { vacancySK: string }) {
   const [activeQuestionIdx, setActiveQuestionIdx] = useState<number>(-1);
   const autoSlideDone = useRef(false);
   const dispatch = useAppDispatch();
 
-  const { data: questions } = useGetQuestionsQuery({ vacancySK: vacancySK });
-  const { data: vacancy } = useGetVacancyBySKQuery({ vacancySK: vacancySK });
+  const { data: questions, isLoading: questionsLoading } = useGetQuestionsQuery({
+    vacancySK: vacancySK,
+  });
+  const { data: vacancy, isLoading: vacancyLoading } = useGetVacancyBySKQuery({
+    vacancySK: vacancySK,
+  });
   const [answerQuestion, { isLoading: answerLoading }] = useAnswerQuestionMutation();
   const sortedQuestions = useMemo(
     () => (questions ? [...questions].sort((qA, qB) => qB.order - qA.order) : []),
     [questions],
   );
 
-  const activeQuestion = sortedQuestions[activeQuestionIdx];
+  const activeQuestion: Question | undefined = sortedQuestions[activeQuestionIdx];
 
   const { explanation, loading: explanationLoading } = useExplanation(activeQuestion?.SK);
 
@@ -45,10 +50,6 @@ export default function Interview({ vacancySK }: { vacancySK: string }) {
     autoSlideDone.current = true;
   }, [sortedQuestions]);
 
-  if (!activeQuestion || !vacancy) {
-    return null;
-  }
-
   return (
     <QuestionPanel
       vacancy={vacancy}
@@ -56,13 +57,13 @@ export default function Interview({ vacancySK }: { vacancySK: string }) {
       disableNext={activeQuestionIdx === sortedQuestions.length - 1}
       disablePrev={activeQuestionIdx === 0}
       answerLoading={answerLoading}
-      explanation={explanation}
+      explanation={explanation || activeQuestion?.explanation || ''}
       explanationLoading={explanationLoading}
       onAnswer={(answer) => {
-        answerQuestion({ answer, questionSK: activeQuestion.SK, vacancySK });
+        answerQuestion({ answer, questionSK: activeQuestion?.SK, vacancySK });
       }}
       onExplain={() => {
-        dispatch(fetchExplanation({ questionSK: activeQuestion.SK, vacancySK }));
+        dispatch(fetchExplanation({ questionSK: activeQuestion?.SK, vacancySK }));
       }}
       onNext={() => {
         setActiveQuestionIdx(Math.min(activeQuestionIdx + 1, sortedQuestions.length - 1));
@@ -70,6 +71,8 @@ export default function Interview({ vacancySK }: { vacancySK: string }) {
       onPrev={() => {
         setActiveQuestionIdx(Math.max(activeQuestionIdx - 1, 0));
       }}
+      vacancyLoading={vacancyLoading}
+      questionLoading={questionsLoading}
     />
   );
 }
