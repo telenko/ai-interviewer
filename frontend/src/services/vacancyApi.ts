@@ -124,4 +124,5 @@ export const {
   useAnswerQuestionMutation,
   useGetQuestionsQuery,
   useAddVacancyMutation,
+  useRemoveVacancyMutation,
 } = vacancyApi;

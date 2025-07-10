@@ -1,5 +1,5 @@
 1. [DONE] add explanation to DB
-2. add remove_vacancy edp
+2. [DONE] add remove_vacancy edp
 3. mobile layout modal
 4. i18n
 5. mobile layour navs
