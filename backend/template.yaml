@@ -12,6 +12,15 @@ Parameters:
   OpenAIApiKey:
     Type: String
     NoEcho: true
+  AllowOrigin:
+    Type: String
+    NoEcho: true
+  AuthClientID:
+    Type: String
+    NoEcho: true
+  AuthIssuerURL:
+    Type: String
+    NoEcho: true
 
 Resources:
   InterviewerHttpApi:
@@ -27,7 +36,16 @@ Resources:
           - Content-Type
           - Authorization
         AllowOrigins:
-          - https://d3b5hameri9hon.cloudfront.net
+          - !Ref AllowOrigin
+      Auth:
+        DefaultAuthorizer: CognitoAuthorizer
+        Authorizers:
+          CognitoAuthorizer:
+            IdentitySource: "$request.header.Authorization"
+            JwtConfiguration:
+              audience:
+                - !Ref AuthClientID
+              issuer: !Ref AuthIssuerURL
 
   InterviewerTable:
     Type: AWS::DynamoDB::Table
@@ -72,6 +90,8 @@ Resources:
             Path: /vacancy-session
             Method: POST
             ApiId: !Ref InterviewerHttpApi
+            Auth:
+              Authorizer: CognitoAuthorizer
 
   GenerateQuestionsFunction:
     Type: AWS::Serverless::Function

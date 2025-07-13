@@ -24,7 +24,6 @@ MAX_QUESTIONS = 10
 
 def analyze_vacancy(vacancy: Vacancy) -> Optional[AnalyzeVacancyOutput]:
     client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-    start_time = time.time()
     response = client.chat.completions.parse(
         model="gpt-4o-mini",
         response_format=AnalyzeVacancyOutput,
@@ -35,7 +34,4 @@ def analyze_vacancy(vacancy: Vacancy) -> Optional[AnalyzeVacancyOutput]:
             }
         ],
     )
-    duration = time.time() - start_time
-    print(f"⏱ GPT response time: {duration:.2f} seconds")
     return response.choices[0].message.parsed
-

@@ -1,16 +1,16 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { BASE_API_URL } from './InterviewerApi';
+import { createApi } from '@reduxjs/toolkit/query/react';
+import { interviewBaseQuery } from './InterviewerApi';
 import type { Question, Vacancy } from '@/models/entities';
 
 // Define a service using a base URL and expected endpoints
 export const vacancyApi = createApi({
   reducerPath: 'vacancyAPI',
-  baseQuery: fetchBaseQuery({ baseUrl: BASE_API_URL }),
+  baseQuery: interviewBaseQuery(),
   tagTypes: ['Vacancy', 'VacancyList', 'VacancyQuestions'],
   endpoints: (builder) => ({
     getVacancies: builder.query<Vacancy[], void>({
       query: () => ({
-        url: 'vacancy-session',
+        url: '/vacancy-session',
         method: 'POST',
         body: {
           operation: 'get_vacancies',
@@ -22,7 +22,7 @@ export const vacancyApi = createApi({
     }),
     getVacancyBySK: builder.query<Vacancy, { vacancySK: string }>({
       query: (payload) => ({
-        url: 'vacancy-session',
+        url: '/vacancy-session',
         method: 'POST',
         body: {
           operation: 'get_vacancy',
@@ -36,7 +36,7 @@ export const vacancyApi = createApi({
     }),
     getQuestions: builder.query<Question[], { vacancySK: string }>({
       query: (payload) => ({
-        url: 'vacancy-session',
+        url: '/vacancy-session',
         method: 'POST',
         body: {
           operation: 'get_questions',
@@ -55,7 +55,7 @@ export const vacancyApi = createApi({
       { vacancySK: string; questionSK: string; answer: string }
     >({
       query: (payload) => ({
-        url: 'vacancy-session',
+        url: '/vacancy-session',
         method: 'POST',
         body: {
           operation: 'answer_question',
@@ -80,7 +80,7 @@ export const vacancyApi = createApi({
       { title: string; url?: string; skills: string[] }
     >({
       query: (payload) => ({
-        url: 'vacancy-session',
+        url: '/vacancy-session',
         method: 'POST',
         body: {
           operation: 'create_vacancy',
@@ -98,7 +98,7 @@ export const vacancyApi = createApi({
     }),
     removeVacancy: builder.mutation<void, { vacancySK: string }>({
       query: (payload) => ({
-        url: 'vacancy-session',
+        url: '/vacancy-session',
         method: 'POST',
         body: {
           operation: 'remove_vacancy',

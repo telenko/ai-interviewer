@@ -43,8 +43,6 @@ def update_entity(table, pk_value, sk_value, update_attrs: dict):
     return response.get("Attributes")
 
 
-USER_ID = "andrii_t"
-
 table_name = os.environ["TABLE_NAME"]
 dynamodb = boto3.resource("dynamodb")
 

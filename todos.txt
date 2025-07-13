@@ -1,5 +1,6 @@
-1. [DONE] add explanation to DB
-2. [DONE] add remove_vacancy edp
-3. mobile layout modal
-4. i18n
-5. mobile layour navs
+-
+-
+3. mobile layout gen (send/answer actions, modal, skeletons fix, etc)
+4. desktop layout fixes (skeletons)
+5. auth layout + refactor
+6. input security (max len for title, skill, max amount of skills, max answer len, max vacancies amount)

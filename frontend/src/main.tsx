@@ -8,8 +8,10 @@ import { routeTree } from './routeTree.gen';
 import './styles.css';
 import reportWebVitals from './reportWebVitals.ts';
 import { Provider } from 'react-redux';
+import { AuthProvider } from 'react-oidc-context';
 import { store } from './store';
 import '../i18n';
+import Auth from './modules/Auth';
 
 // Create a new router instance
 const router = createRouter({
@@ -20,6 +22,19 @@ const router = createRouter({
   defaultStructuralSharing: true,
   defaultPreloadStaleTime: 0,
 });
+
+const cognitoAuthConfig = {
+  authority: import.meta.env.VITE_AUTH_IDP_URL,
+  client_id: import.meta.env.VITE_AUTH_CLIENT_ID,
+  redirect_uri: import.meta.env.VITE_AUTH_REDIRECT_LOGIN_URL,
+  post_logout_redirect_uri: import.meta.env.VITE_AUTH_REDIRECT_LOGOUT_URL,
+  response_type: 'code',
+  scope: 'phone openid email',
+  onSigninCallback: () => {
+    // Після успішного логіну – прибрати код із URL
+    window.history.replaceState({}, document.title, window.location.pathname);
+  },
+};
 
 // Register the router instance for type safety
 declare module '@tanstack/react-router' {
@@ -34,9 +49,13 @@ if (rootElement && !rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement);
   root.render(
     <StrictMode>
-      <Provider store={store}>
-        <RouterProvider router={router} />
-      </Provider>
+      <AuthProvider {...cognitoAuthConfig}>
+        <Auth>
+          <Provider store={store}>
+            <RouterProvider router={router} />
+          </Provider>
+        </Auth>
+      </AuthProvider>
     </StrictMode>,
   );
 }

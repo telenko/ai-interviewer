@@ -14,7 +14,15 @@ if [ -z "$OPENAI_API_KEY" ]; then
   exit 1
 fi
 
+# Білд
+echo "🔨 Ребілд проєкту..."
+sam.cmd build || { echo "❌ SAM build помилка"; exit 1; }
+
 # Деплой
+echo "🔨 Деплой проєкту..."
 sam.cmd deploy \
   --region eu-central-1 \
-  --parameter-overrides OpenAIApiKey="$OPENAI_API_KEY"
+  --parameter-overrides OpenAIApiKey="$OPENAI_API_KEY" \
+    AuthClientID="$AUTH_CLIENT_ID" \
+    AuthIssuerURL="$AUTH_ISSUER_URL" \
+    AllowOrigin="$ALLOW_ORIGIN"

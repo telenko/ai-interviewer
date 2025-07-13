@@ -15,6 +15,14 @@ def lambda_handler(event, context):
         operation_str = body.get("operation")
         payload = body.get("payload")
 
+        claims = event["requestContext"]["authorizer"]["jwt"]["claims"]
+        user_id = claims["sub"]  # Унікальний Cognito user ID
+
+        if not user_id:
+            return {
+                "statusCode": 401,
+            }
+
         if not operation_str:
             return {
                 "statusCode": 400,
@@ -27,21 +35,21 @@ def lambda_handler(event, context):
             return {"statusCode": 400, "body": json.dumps({"error": str(e)})}
 
         if operation == Operation.CREATE_VACANCY:
-            result = create_vacancy.create_vacancy(TABLE, payload)
+            result = create_vacancy.create_vacancy(TABLE, user_id, payload)
         elif operation == Operation.GET_VACANCIES:
-            result = get_vacancies.get_vacancies(TABLE, payload)
+            result = get_vacancies.get_vacancies(TABLE, user_id, payload)
         elif operation == Operation.GET_VACANCY:
-            result = get_vacancy(TABLE, payload)
+            result = get_vacancy(TABLE, user_id, payload)
         elif operation == Operation.ANSWER_QUESTION:
-            result = answer_question.answer_question(TABLE, payload)
+            result = answer_question.answer_question(TABLE, user_id, payload)
         elif operation == Operation.GET_QUESTIONS:
-            result = get_questions.get_questions(TABLE, payload)
+            result = get_questions.get_questions(TABLE, user_id, payload)
         elif operation == Operation.EXPLAIN:
-            result = explain_op.explain_op(TABLE, payload)
+            result = explain_op.explain_op(TABLE, user_id, payload)
         elif operation == Operation.GENERATE_VACANCY:
-            result = generate_vacancy_op.generate_vacancy_op(TABLE, payload)
+            result = generate_vacancy_op.generate_vacancy_op(TABLE, user_id, payload)
         elif operation == Operation.REMOVE_VACANCY:
-            result = remove_vacancy(TABLE, payload)
+            result = remove_vacancy(TABLE, user_id, payload)
         elif operation == Operation.ECHO:
             return {"statusCode": 200, "body": "Hello from Lambda :)"}
 
