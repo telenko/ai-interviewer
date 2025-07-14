@@ -2,6 +2,9 @@ import json
 import boto3
 import os
 
+from src.models.operationsPayloads import CreateVacancyPayload
+from src.config.limits import VACANCIES_MAX_AMOUNT
+from src.db.query import get_vacancies_count_by_user_id
 from src.db.utils import add_item
 from src.models.entities import build_vacancy
 
@@ -21,12 +24,17 @@ def invoke_generate_questions(user_id: str, vacancy_sk: str):
     )
 
 
-def create_vacancy(table, user_id, payload):
+def create_vacancy(table, user_id, payload: CreateVacancyPayload):
+    current_vacancies_count = get_vacancies_count_by_user_id(table, user_id)
+    if current_vacancies_count > VACANCIES_MAX_AMOUNT:
+        raise Exception(
+            f"Not allowed to have more than {VACANCIES_MAX_AMOUNT} of vacancies"
+        )
     vacancy = build_vacancy(
         user_id=user_id,
-        title=payload.get("title") or "",
-        skills=payload.get("skills"),
-        url=payload.get("url"),
+        title=payload.title,
+        skills=payload.skills,
+        url=payload.url,
     )
     add_item(table, vacancy)
 

@@ -1,3 +1,4 @@
+from src.models.operationsPayloads import AnswerQuestionPayload
 from src.db.query import (
     calculate_progress_and_score,
     get_question_by_user_id_and_vacancy_SK_and_question_SK,
@@ -27,13 +28,9 @@ def update_vacancy_metrics(table, user_id, PK, vacancy_SK):
 
 
 # { question_SK, vacancy_SK, answer }
-def answer_question(table, user_id, payload):
-    required_keys = ["question_SK", "vacancy_SK", "answer"]
-    missing_keys = [key for key in required_keys if key not in payload]
-    if missing_keys:
-        raise ValueError(f"Missing required keys in payload: {missing_keys}")
-    question_SK = payload.get("question_SK")
-    vacancy_SK = payload.get("vacancy_SK")
+def answer_question(table, user_id, payload: AnswerQuestionPayload):
+    question_SK = payload.question_SK
+    vacancy_SK = payload.vacancy_SK
     vacancy = get_vacancy_by_user_id_and_vacancy_SK(TABLE, user_id, vacancy_SK)
     question = get_question_by_user_id_and_vacancy_SK_and_question_SK(
         TABLE, user_id, vacancy_SK, question_SK
@@ -42,14 +39,14 @@ def answer_question(table, user_id, payload):
         raise Exception("Wrong data provided, failed to retrieve vacancy and question")
     validity = check_answer.check_answer(
         question.question,
-        payload.get("answer"),
+        payload.answer,
         vacancy.title,
     )
     if not validity:
         raise Exception("Failed to analyze answer within AI")
 
     updates = {
-        "answer": payload.get("answer"),
+        "answer": payload.answer,
         "correctness_score": validity.correctness_rate,
     }
     update_entity(

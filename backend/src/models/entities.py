@@ -1,7 +1,21 @@
 from enum import Enum
-from typing import Optional, List
+from typing import Annotated, Optional, List
 import uuid
-from pydantic import BaseModel, ConfigDict
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    HttpUrl,
+    StringConstraints,
+    TypeAdapter,
+)
+
+from src.config.limits import (
+    ANSWER_MAX_LEN,
+    QUESTION_MAX_LEN,
+    SKILLS_MAX_AMOUNT,
+    TEXT_MAX_LEN,
+)
 
 
 class EntityType(Enum):
@@ -19,26 +33,44 @@ class EntityType(Enum):
             raise ValueError(f"Unknown operation: {label}")
 
 
+class QuestionType(Enum):
+    TEXT = "text"
+    CODING = "coding"
+
+    @staticmethod
+    def from_str(label: str):
+        label = label.lower()
+        if label == "text":
+            return QuestionType.TEXT
+        elif label == "coding":
+            return QuestionType.CODING
+        else:
+            raise ValueError(f"Unknown type: {label}")
+
+
 class BaseDynamoModel(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     def to_dynamo(self) -> dict:
-        return self.model_dump()
+        return self.model_dump(mode="json")
 
 
 class Vacancy(BaseDynamoModel):
     PK: str
     SK: str
-    title: str
-    skills: List[str]
-    url: Optional[str] = None
+    title: Annotated[str, StringConstraints(max_length=TEXT_MAX_LEN)]
+    skills: Annotated[
+        List[Annotated[str, StringConstraints(max_length=TEXT_MAX_LEN)]],
+        Field(max_length=SKILLS_MAX_AMOUNT),
+    ]
+    url: Optional[HttpUrl] = None
     progress: float = 0.0
     type: str
     score: float
 
 
 def build_vacancy(
-    user_id: str, title: str, skills: List[str], url: Optional[str] = None
+    user_id: str, title: str, skills: List[str], url: Optional[HttpUrl] = None
 ) -> Vacancy:
     vacancy_id = str(uuid.uuid4())
     return Vacancy(
@@ -56,16 +88,19 @@ def build_vacancy(
 class Question(BaseDynamoModel):
     PK: str
     SK: str
-    question: str
-    answer: Optional[str] = None
+    question: Annotated[str, StringConstraints(max_length=QUESTION_MAX_LEN)]
+    answer: Annotated[Optional[str], StringConstraints(max_length=ANSWER_MAX_LEN)] = (
+        None
+    )
     explanation: Optional[str] = None
     correctness_score: float = 0.0
     order: Optional[int] = 0
     type: str
+    question_type: Optional[QuestionType] = QuestionType.TEXT
 
 
 def build_question(
-    user_id: str, vacancy_SK: str, question_text: str, order: int
+    user_id: str, vacancy_SK: str, question_text: str, order: int, question_type: str
 ) -> Question:
     question_id = str(uuid.uuid4())
     return Question(
@@ -77,6 +112,7 @@ def build_question(
         correctness_score=0.0,
         order=order,
         type=EntityType.QUESTION.value,
+        question_type=QuestionType.from_str(question_type),
     )
 
 
@@ -87,7 +123,11 @@ def validate_questions(
     for q in questions_data:
         result.append(
             build_question(
-                user_id, vacancy_sk, q.get("question") or "", q.get("order") or 0
+                user_id,
+                vacancy_sk,
+                q.get("question") or "",
+                q.get("order") or 0,
+                q.get("question_type") or QuestionType.TEXT.value,
             )
         )
     return result

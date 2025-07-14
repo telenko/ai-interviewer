@@ -2,7 +2,6 @@ from src.db.query import get_vacancy_by_user_id_and_vacancy_SK
 from src.ai import analyze_vacancy
 from src.db.utils import add_item
 from src.models.entities import build_question
-from src.models.entities import Vacancy
 
 
 def generateQuestions(table, payload):
@@ -18,5 +17,7 @@ def generateQuestions(table, payload):
 
     # 3. Зберегти питання
     for q in questions_response.questions:
-        question = build_question(user_id, vacancy.SK, q.question, q.order)
+        question = build_question(
+            user_id, vacancy.SK, q.question, q.order, q.question_type.value
+        )
         add_item(table, question)

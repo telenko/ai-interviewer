@@ -1,3 +1,4 @@
+from src.models.operationsPayloads import ExplainQuestionPayload
 from src.ai.explain_question import explain_question
 from src.db.query import (
     get_question_by_user_id_and_vacancy_SK_and_question_SK,
@@ -7,9 +8,9 @@ from src.db.utils import update_entity
 
 
 # { question_SK, vacancy_SK }
-def explain_op(table, user_id, payload):
-    question_SK = payload.get("question_SK")
-    vacancy_SK = payload.get("vacancy_SK")
+def explain_op(table, user_id, payload: ExplainQuestionPayload):
+    question_SK = payload.question_SK
+    vacancy_SK = payload.vacancy_SK
     question = get_question_by_user_id_and_vacancy_SK_and_question_SK(
         table, user_id, vacancy_SK, question_SK
     )

@@ -154,7 +154,7 @@ export default function AddVacancyModal({ open, onClose }: { open: boolean; onCl
                 title,
                 skills,
                 url,
-              }).then(onClose);
+              }).then((e) => (!e.error ? onClose() : null));
             }}
             disabled={!isValid}
           >

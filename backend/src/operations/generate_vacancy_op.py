@@ -2,6 +2,7 @@ import json
 from typing import Tuple
 import requests
 from bs4 import BeautifulSoup
+from src.models.operationsPayloads import GenerateVacancyPayload
 from src.ai.generate_vacancy import generate_vacancy
 
 MAX_TITLE_LEN = 400
@@ -30,11 +31,11 @@ def extract_text_from_html(html: str) -> Tuple[str, str]:
 
 
 # { url }
-def generate_vacancy_op(table, user_id, payload):
-    url = payload.get("url")
+def generate_vacancy_op(table, user_id, payload: GenerateVacancyPayload):
+    url = payload.url
     if not url:
         raise Exception("url not found in body")
-    html = requests.get(url, timeout=10).text
+    html = requests.get(str(url), timeout=10).text
     title, description = extract_text_from_html(html)
     title = truncate(title, MAX_TITLE_LEN)
     description = truncate(description, MAX_DESC_LEN)

@@ -46,4 +46,4 @@ def update_entity(table, pk_value, sk_value, update_attrs: dict):
 table_name = os.environ["TABLE_NAME"]
 dynamodb = boto3.resource("dynamodb")
 
-TABLE = dynamodb.Table(table_name)
+TABLE = dynamodb.Table(table_name)  # type: ignore[attr-defined]

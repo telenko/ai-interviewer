@@ -1,25 +1,32 @@
-from typing import List, Optional
+from enum import Enum
+from typing import Annotated, List, Optional
 from openai import BaseModel, OpenAI
-import time
 import os
-from pydantic import ConfigDict
+from pydantic import ConfigDict, Field, StringConstraints
 from typing import List
 from pydantic import BaseModel, ConfigDict
 
+from src.config.limits import QUESTION_MAX_LEN, QUESTIONS_MAX_AMOUNT
 from src.models.entities import Vacancy
+
+
+class QuestionTypeLLM(str, Enum):
+    TEXT = "text"
+    CODING = "coding"
 
 
 class QuestionLLM(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    question: str
+    question: Annotated[str, StringConstraints(max_length=QUESTION_MAX_LEN)]
+    question_type: QuestionTypeLLM
     order: int
 
 
 class AnalyzeVacancyOutput(BaseModel):
-    questions: List[QuestionLLM]
-
-
-MAX_QUESTIONS = 10
+    questions: Annotated[
+        List[QuestionLLM],
+        Field(max_length=QUESTIONS_MAX_AMOUNT),
+    ]
 
 
 def analyze_vacancy(vacancy: Vacancy) -> Optional[AnalyzeVacancyOutput]:
@@ -30,7 +37,7 @@ def analyze_vacancy(vacancy: Vacancy) -> Optional[AnalyzeVacancyOutput]:
         messages=[
             {
                 "role": "user",
-                "content": f"Make questions for interview for vacancy with title: {vacancy.title}, with such skills: {', '.join(vacancy.skills)}. Return maximum {MAX_QUESTIONS} questions",
+                "content": f"Make questions for interview for vacancy with title: {vacancy.title}, with such skills: {', '.join(vacancy.skills)}.Return maximum {QUESTIONS_MAX_AMOUNT} questions. Use 'coding' only for programming vacancies.",
             }
         ],
     )

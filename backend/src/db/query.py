@@ -1,20 +1,28 @@
 from boto3.dynamodb.conditions import Key
 from typing import List, Optional, Tuple
+from src.config.limits import ITEMS_API_LIMIT_LEN
 from src.models.entities import EntityType, Vacancy, Question
-
-ITEMS_LIMIT_LEN = 40
 
 
 def get_vacancies_by_user_id(table, user_id: str) -> List[Vacancy]:
     response = table.query(
         KeyConditionExpression=Key("PK").eq(f"USER#{user_id}")
         & Key("SK").begins_with("VACANCY#"),
-        Limit=ITEMS_LIMIT_LEN,
+        Limit=ITEMS_API_LIMIT_LEN,
     )
     items = response.get("Items", [])
     return [
         Vacancy(**item) for item in items if item["type"] == EntityType.VACANCY.value
     ]
+
+
+def get_vacancies_count_by_user_id(table, user_id: str) -> int:
+    response = table.query(
+        KeyConditionExpression=Key("PK").eq(f"USER#{user_id}")
+        & Key("SK").begins_with("VACANCY#"),
+        Limit=ITEMS_API_LIMIT_LEN,
+    )
+    return response.get("Count", 0)
 
 
 def get_questions_by_user_id_and_vacancy_id(
@@ -23,7 +31,7 @@ def get_questions_by_user_id_and_vacancy_id(
     response = table.query(
         KeyConditionExpression=Key("PK").eq(f"USER#{user_id}#{vacancy_SK}")
         & Key("SK").begins_with(f"QUESTION#"),
-        Limit=ITEMS_LIMIT_LEN,
+        Limit=ITEMS_API_LIMIT_LEN,
     )
     items = response.get("Items", [])
     return [Question(**item) for item in items]
@@ -35,7 +43,7 @@ def get_question_by_user_id_and_vacancy_SK_and_question_SK(
     response = table.query(
         KeyConditionExpression=Key("PK").eq(f"USER#{user_id}#{vacancy_SK}")
         & Key("SK").eq(f"{question_SK}"),
-        Limit=ITEMS_LIMIT_LEN,
+        Limit=ITEMS_API_LIMIT_LEN,
     )
     items = response.get("Items", [])
     return Question(**items[0])
@@ -47,7 +55,7 @@ def get_vacancy_by_user_id_and_vacancy_SK(
     response = table.query(
         KeyConditionExpression=Key("PK").eq(f"USER#{user_id}")
         & Key("SK").eq(f"{vacancy_SK}"),
-        Limit=ITEMS_LIMIT_LEN,
+        Limit=ITEMS_API_LIMIT_LEN,
     )
     items = response.get("Items", [])
     if not items:
