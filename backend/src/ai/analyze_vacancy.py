@@ -7,7 +7,7 @@ from typing import List
 from pydantic import BaseModel, ConfigDict
 
 from src.config.limits import QUESTION_MAX_LEN, QUESTIONS_MAX_AMOUNT
-from src.models.entities import Vacancy
+from src.models.entities import Vacancy, EditorLanguage
 
 
 class QuestionTypeLLM(str, Enum):
@@ -20,6 +20,7 @@ class QuestionLLM(BaseModel):
     question: Annotated[str, StringConstraints(max_length=QUESTION_MAX_LEN)]
     question_type: QuestionTypeLLM
     order: int
+    prog_lang_code: Optional[EditorLanguage] = None
 
 
 class AnalyzeVacancyOutput(BaseModel):
@@ -37,7 +38,13 @@ def analyze_vacancy(vacancy: Vacancy) -> Optional[AnalyzeVacancyOutput]:
         messages=[
             {
                 "role": "user",
-                "content": f"Make questions for interview for vacancy with title: {vacancy.title}, with such skills: {', '.join(vacancy.skills)}.Return maximum {QUESTIONS_MAX_AMOUNT} questions. Use 'coding' only for programming vacancies.",
+                "content": (
+                    f"Make questions for interview for vacancy with title: {vacancy.title}, with such skills: {', '.join(vacancy.skills)}."
+                    f"Return maximum {QUESTIONS_MAX_AMOUNT} questions."
+                    f"Set question_type 'coding' only for programming vacancies."
+                    f"Set 'prog_lang_code' flag only for 'coding' questions."
+                    + (f"Use language {vacancy.lang_code}" if vacancy.lang_code else "")
+                ),
             }
         ],
     )

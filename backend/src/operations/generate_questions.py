@@ -18,6 +18,11 @@ def generateQuestions(table, payload):
     # 3. Зберегти питання
     for q in questions_response.questions:
         question = build_question(
-            user_id, vacancy.SK, q.question, q.order, q.question_type.value
+            user_id,
+            vacancy.SK,
+            q.question,
+            q.order,
+            q.question_type.value,
+            q.prog_lang_code.value if q.prog_lang_code else None,
         )
         add_item(table, question)

@@ -5,7 +5,10 @@ export type Vacancy = {
   skills: string[];
   progress: number;
   score: number;
+  lang_code?: string;
 };
+
+export type ProgLangEnum = 'py' | 'js' | 'ts' | 'java' | 'c#' | 'dotnet' | 'other';
 
 export type Question = {
   PK: string;
@@ -15,4 +18,6 @@ export type Question = {
   order: number;
   correctness_score?: number;
   explanation?: string;
+  question_type: 'text' | 'coding';
+  prog_lang_code?: ProgLangEnum;
 };

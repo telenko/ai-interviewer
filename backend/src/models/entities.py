@@ -12,6 +12,7 @@ from pydantic import (
 
 from src.config.limits import (
     ANSWER_MAX_LEN,
+    LANG_CODE_LIMIT,
     QUESTION_MAX_LEN,
     SKILLS_MAX_AMOUNT,
     TEXT_MAX_LEN,
@@ -67,10 +68,17 @@ class Vacancy(BaseDynamoModel):
     progress: float = 0.0
     type: str
     score: float
+    lang_code: Annotated[
+        Optional[str], StringConstraints(max_length=LANG_CODE_LIMIT)
+    ] = None
 
 
 def build_vacancy(
-    user_id: str, title: str, skills: List[str], url: Optional[HttpUrl] = None
+    user_id: str,
+    title: str,
+    skills: List[str],
+    url: Optional[HttpUrl] = None,
+    lang_code: Optional[str] = None,
 ) -> Vacancy:
     vacancy_id = str(uuid.uuid4())
     return Vacancy(
@@ -82,7 +90,26 @@ def build_vacancy(
         progress=0.0,
         type=EntityType.VACANCY.value,
         score=0.0,
+        lang_code=lang_code,
     )
+
+
+class EditorLanguage(str, Enum):
+    python = "py"
+    javascript = "js"
+    typescript = "ts"
+    java = "java"
+    csharp = "c#"
+    dotnet = "dotnet"
+    other = "other"
+
+    @staticmethod
+    def from_str(label: str) -> "EditorLanguage":
+        label = label.lower()
+        for lang in EditorLanguage:
+            if lang.value == label or lang.name.lower() == label:
+                return lang
+        raise ValueError(f"Unknown language: {label}")
 
 
 class Question(BaseDynamoModel):
@@ -97,10 +124,16 @@ class Question(BaseDynamoModel):
     order: Optional[int] = 0
     type: str
     question_type: Optional[QuestionType] = QuestionType.TEXT
+    prog_lang_code: Optional[EditorLanguage] = None
 
 
 def build_question(
-    user_id: str, vacancy_SK: str, question_text: str, order: int, question_type: str
+    user_id: str,
+    vacancy_SK: str,
+    question_text: str,
+    order: int,
+    question_type: str,
+    prog_lang_code: Optional[str],
 ) -> Question:
     question_id = str(uuid.uuid4())
     return Question(
@@ -113,6 +146,9 @@ def build_question(
         order=order,
         type=EntityType.QUESTION.value,
         question_type=QuestionType.from_str(question_type),
+        prog_lang_code=(
+            EditorLanguage.from_str(prog_lang_code) if prog_lang_code else None
+        ),
     )
 
 
@@ -128,6 +164,7 @@ def validate_questions(
                 q.get("question") or "",
                 q.get("order") or 0,
                 q.get("question_type") or QuestionType.TEXT.value,
+                q.get("prog_lang_code") or None,
             )
         )
     return result

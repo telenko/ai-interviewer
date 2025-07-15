@@ -7,6 +7,8 @@ import { useEffect, useState } from 'react';
 import { Link } from '@tanstack/react-router';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useTranslation } from 'react-i18next';
+import { CodeEditor } from '@/components/custom/CodeEditor';
+import { MAX_ANSWER_LEN } from '@/config/limits';
 
 export default function QuestionPanel({
   vacancy,
@@ -42,6 +44,7 @@ export default function QuestionPanel({
     setAnswer(question?.answer ?? '');
   }, [question]);
   const { t } = useTranslation();
+  const isValid = answer.length <= MAX_ANSWER_LEN;
   return (
     <div className="max-w-2xl mx-auto p-4 flex flex-col gap-6 min-h-screen">
       <div className="flex flex-nowrap items-center sm:flex-row sm:items-center sm:justify-between gap-2">
@@ -101,13 +104,24 @@ export default function QuestionPanel({
       </Card>
 
       {/* --- Текстарія --- */}
-      <Textarea
-        placeholder={t('enter_answer')}
-        className="min-h-[200px] resize-none flex-grow"
-        value={answer}
-        onChange={(e) => setAnswer(e.target.value)}
-        maxLength={300}
-      />
+      {question?.question_type === 'coding' ? (
+        <CodeEditor
+          className={`min-h-[200px] max-h-[600px] resize-none flex-grow ${!isValid ? 'border border-2 border-red-500' : ''}`}
+          minHeight={'200px'}
+          placeholder={t('enter_answer')}
+          value={answer}
+          onChange={setAnswer}
+          language={question.prog_lang_code || 'other'}
+        />
+      ) : (
+        <Textarea
+          placeholder={t('enter_answer')}
+          className="min-h-[200px] resize-none flex-grow"
+          value={answer}
+          onChange={(e) => setAnswer(e.target.value)}
+          maxLength={MAX_ANSWER_LEN}
+        />
+      )}
 
       {/* --- Пояснення --- */}
       {explanation && (
@@ -138,7 +152,9 @@ export default function QuestionPanel({
         </Button>
         <Button
           onClick={() => onAnswer(answer)}
-          disabled={answerLoading || answer === question?.answer || !answer || questionLoading}
+          disabled={
+            answerLoading || answer === question?.answer || !answer || questionLoading || !isValid
+          }
         >
           {answerLoading ? <Loader2Icon className="animate-spin" /> : null}
           {t('answer')}

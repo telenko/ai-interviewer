@@ -19,6 +19,7 @@
         "continue": "Continue",
         "new_vacancy": "New vacancy",
         "add_vacancy": "Add vacancy",
+        "lang_code": "Preffered language (code, for example en, es, fr)",
         "gentle_url_placeh": "Paste vacancy URL :) Will be faster!!",
         "generate": "Generate",
         "vacancy_name": "Vacancy name",

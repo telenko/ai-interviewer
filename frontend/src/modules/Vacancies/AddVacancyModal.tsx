@@ -19,6 +19,7 @@ export default function AddVacancyModal({ open, onClose }: { open: boolean; onCl
   const [skills, setSkills] = useState<string[]>([]);
   const [inputSkill, setInputSkill] = useState('');
   const [loadingFromUrl, setLoadingFromUrl] = useState(false);
+  const [langCode, setLangCode] = useState<string>();
   const [addVacancy, { isLoading: vacancyCreationLoading }] = useAddVacancyMutation();
   const { t } = useTranslation();
 
@@ -143,6 +144,13 @@ export default function AddVacancyModal({ open, onClose }: { open: boolean; onCl
               ))}
             </div>
           </div>
+
+          {/* Lang_code */}
+          <Input
+            placeholder={t('lang_code')}
+            value={langCode}
+            onChange={(e) => setLangCode(e.target.value)}
+          />
         </div>
         <DialogFooter className="mt-4">
           <Button onClick={onClose} variant="outline">
@@ -151,6 +159,7 @@ export default function AddVacancyModal({ open, onClose }: { open: boolean; onCl
           <Button
             onClick={() => {
               addVacancy({
+                langCode,
                 title,
                 skills,
                 url,

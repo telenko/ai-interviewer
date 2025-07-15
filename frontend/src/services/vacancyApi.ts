@@ -77,7 +77,7 @@ export const vacancyApi = createApi({
       {
         item: { vacancy_SK: string };
       },
-      { title: string; url?: string; skills: string[] }
+      { title: string; url?: string; skills: string[]; langCode?: string }
     >({
       query: (payload) => ({
         url: '/vacancy-session',
@@ -88,6 +88,7 @@ export const vacancyApi = createApi({
             title: payload.title,
             skills: payload.skills,
             url: payload.url,
+            ...(payload.langCode ? { lang_code: payload.langCode } : null),
           },
         },
       }),
