@@ -46,7 +46,7 @@ export default function QuestionPanel({
   const { t } = useTranslation();
   const isValid = answer.length <= MAX_ANSWER_LEN;
   return (
-    <div className="max-w-2xl mx-auto p-4 flex flex-col gap-6 min-h-screen">
+    <div className="max-w-2xl mx-auto w-full flex flex-col gap-6 flex-1">
       <div className="flex flex-nowrap items-center sm:flex-row sm:items-center sm:justify-between gap-2">
         <Link
           to="/vacancies"

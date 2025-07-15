@@ -1,25 +1,31 @@
 import { Button } from '@/components/ui/button';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useAuth, type AuthContextProps } from 'react-oidc-context';
 
 let authContainer: AuthContextProps | null = null;
 
 export const getAuthContainer = () => authContainer;
 
-export default function Auth(props: React.PropsWithChildren) {
+export const useSignoutCallback = () => {
+  const auth = useAuth();
+  const signOutRedirect = useCallback(() => {
+    auth.signoutSilent();
+    const clientId = import.meta.env.VITE_AUTH_CLIENT_ID;
+    const logoutUri = import.meta.env.VITE_AUTH_REDIRECT_LOGOUT_URL;
+    const cognitoDomain = import.meta.env.VITE_AUTH_UI_URL;
+    window.location.href = `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(logoutUri)}`;
+  }, [auth]);
+  return signOutRedirect;
+};
+
+export default function Secured(props: React.PropsWithChildren) {
   const auth = useAuth();
 
   useEffect(() => {
     authContainer = auth;
   }, [auth]);
 
-  const signOutRedirect = () => {
-    auth.signoutSilent();
-    const clientId = import.meta.env.VITE_AUTH_CLIENT_ID;
-    const logoutUri = import.meta.env.VITE_AUTH_REDIRECT_LOGOUT_URL;
-    const cognitoDomain = import.meta.env.VITE_AUTH_UI_URL;
-    window.location.href = `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(logoutUri)}`;
-  };
+  const signOutRedirect = useSignoutCallback();
 
   switch (auth.activeNavigator) {
     case 'signinSilent':
@@ -38,15 +44,6 @@ export default function Auth(props: React.PropsWithChildren) {
 
   return (
     <>
-      <div className="p-4 flex">
-        {!auth.isAuthenticated ? (
-          <Button onClick={() => auth.signinRedirect()}>Sign in</Button>
-        ) : (
-          <Button variant="secondary" onClick={() => signOutRedirect()}>
-            Sign out
-          </Button>
-        )}
-      </div>
       {auth.isAuthenticated ? (
         props.children
       ) : (

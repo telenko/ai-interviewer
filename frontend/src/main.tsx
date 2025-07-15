@@ -11,7 +11,7 @@ import { Provider } from 'react-redux';
 import { AuthProvider } from 'react-oidc-context';
 import { store } from './store';
 import '../i18n';
-import Auth from './modules/Auth';
+import Secured from './modules/Auth';
 
 // Create a new router instance
 const router = createRouter({
@@ -50,11 +50,9 @@ if (rootElement && !rootElement.innerHTML) {
   root.render(
     <StrictMode>
       <AuthProvider {...cognitoAuthConfig}>
-        <Auth>
-          <Provider store={store}>
-            <RouterProvider router={router} />
-          </Provider>
-        </Auth>
+        <Provider store={store}>
+          <RouterProvider router={router} />
+        </Provider>
       </AuthProvider>
     </StrictMode>,
   );

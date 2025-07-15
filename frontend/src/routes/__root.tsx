@@ -1,11 +1,20 @@
-import { Outlet, createRootRoute } from '@tanstack/react-router'
-import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
+import Secured from '@/modules/Auth';
+import { Header } from '@/modules/Layout/Header';
+import { Outlet, createRootRoute } from '@tanstack/react-router';
+import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 
 export const Route = createRootRoute({
   component: () => (
     <>
-      <Outlet />
+      <div className="min-h-screen flex flex-col">
+        <Header />
+        <main className="flex-1 p-4 h-[calc(100vh-64px)] flex flex-col">
+          <Secured>
+            <Outlet />
+          </Secured>
+        </main>
+      </div>
       <TanStackRouterDevtools />
     </>
   ),
-})
+});

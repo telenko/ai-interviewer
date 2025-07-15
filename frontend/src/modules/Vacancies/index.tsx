@@ -12,7 +12,7 @@ export default function VacanciesGrid() {
   const [addModalOpen, setAddModalOpen] = useState(false);
   const { t } = useTranslation();
   return (
-    <div className="p-4">
+    <div className="">
       <AddVacancyModal open={addModalOpen} onClose={() => setAddModalOpen(false)} />
       <Button className="flex items-center gap-2" onClick={() => setAddModalOpen(true)}>
         <PlusCircleIcon className="w-5 h-5" />
