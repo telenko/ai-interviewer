@@ -30,6 +30,8 @@ export function LanguageSelect({
         </Button>
       </PopoverTrigger>
       <PopoverContent
+        avoidCollisions={false}
+        collisionPadding={0}
         className="min-w-full
                     max-h-[60vh] 
                     overflow-auto 

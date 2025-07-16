@@ -158,7 +158,7 @@ export default function QuestionPanel({
           </Button>
         </div>
         {!isValidAnswer ? (
-          <p className="mt-1 text-sm text-red-600" role="alert">
+          <p className="mt-1 text-sm text-red-600 absolute bottom-[-20px] left-1" role="alert">
             {t('answer_too_long_error', { amount: MAX_ANSWER_LEN })}
           </p>
         ) : (
