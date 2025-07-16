@@ -1,7 +1,6 @@
 {
     "translation": {
         "app": "AI Інтерв'ювер",
-        "backToVacancies": "Назад до вакансій",
         "progress_colon": "Прогрес:",
         "total_score_colon": "Загальний бал:",
         "score_colon": "Бал:",
@@ -19,6 +18,7 @@
         "cancel": "Скасувати",
         "remove": "Видалити",
         "continue": "Продовжити",
+        "question": "Питання",
         "new_vacancy": "Нова вакансія",
         "add_vacancy": "Додати вакансію",
         "lang_code": "Мова для інтерв'ю (код, наприклад ua, pl, en)",

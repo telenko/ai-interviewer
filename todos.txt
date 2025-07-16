@@ -1,12 +1,11 @@
 
 - Monitoring integration - Engagement, Retention, CTR
 - UI bugs/next: 
-    -- i18n, 
-    -- md viewer, 
-    -- numerator of qu, 
+    -- i18n,
     -- skeletons, 
     -- vacancy card relayout, 
     -- welcome page + icon brand, 
     -- add_v button change, 
     -- mobile bottom bug, 
     -- loaders auth fix from text
+    -- interview buttons desktop bug with loader

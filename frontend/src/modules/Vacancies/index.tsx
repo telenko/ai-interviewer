@@ -1,6 +1,6 @@
 import { Skeleton } from '@/components/ui/skeleton';
 import { useGetVacanciesQuery } from '@/services/vacancyApi';
-import VacancyCard from './VacancyCard';
+import VacancyCard, { VacancyCardSkeleton } from './VacancyCard';
 import { PlusCircleIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import AddVacancyModal from './AddVacancyModal';
@@ -19,10 +19,8 @@ export default function VacanciesGrid() {
         {t('add_vacancy')}
       </Button>
       {/* w-full max-w-sm */}
-      <div className="grid responsive-grid place-content-start gap-4 py-4">
-        {isLoading
-          ? [1, 2, 3].map((n) => <Skeleton key={n} className="h-[265px] md:w-[300px] w-full" />)
-          : null}
+      <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-4 py-4">
+        {isLoading ? [1, 2, 3].map((n) => <VacancyCardSkeleton key={n} />) : null}
         {!isLoading && vacancies
           ? vacancies.map((vacancy) => <VacancyCard key={vacancy.SK} vacancy={vacancy} />)
           : null}

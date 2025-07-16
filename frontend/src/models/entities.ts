@@ -4,6 +4,7 @@ export type Vacancy = {
   title: string;
   skills: string[];
   progress: number;
+  url?: string;
   score: number;
   lang_code?: string;
 };

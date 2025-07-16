@@ -24,7 +24,6 @@ def generate_vacancy(title: str, description: str) -> Optional[VacancyLLM]:
         f"Title: {title}\n\n"
         f"Description: {description}\n\n"
         f"Instructions:\n"
-        f"- Return role of job offer in 'title'"
         f"- Extract the role of the job offer and return it in 'title'. Limit it to {TEXT_MAX_LEN} characters.\n"
         f"- Extract a list of relevant skills. Return at most {SKILLS_MAX_AMOUNT} skills, each up to {TEXT_MAX_LEN} characters long.\n"
         f"- If the document does not appear to describe a real job offer, return is_vacancy_looks_real as false.\n"

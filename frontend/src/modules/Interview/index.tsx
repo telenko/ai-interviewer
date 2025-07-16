@@ -87,6 +87,8 @@ export default function Interview({ vacancySK }: { vacancySK: string }) {
       }}
       vacancyLoading={vacancyLoading}
       questionLoading={questionsLoading}
+      currentQuestionIndex={activeQuestionIdx}
+      totalQuestions={questions?.length || 0}
     />
   );
 }

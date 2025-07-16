@@ -1,7 +1,6 @@
 {
     "translation": {
         "app": "AI Interviewer",
-        "backToVacancies": "Back to vacancies",
         "progress_colon": "Progress:",
         "total_score_colon": "Total score:",
         "score_colon": "Score:",
@@ -19,6 +18,7 @@
         "cancel": "Cancel",
         "remove": "Remove",
         "continue": "Continue",
+        "question": "Question",
         "new_vacancy": "New vacancy",
         "add_vacancy": "Add vacancy",
         "lang_code": "Preffered language (code, for example en, es, fr)",

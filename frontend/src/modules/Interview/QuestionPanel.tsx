@@ -1,17 +1,10 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
-import {
-  ArrowLeft,
-  ArrowUp,
-  ChevronLeft,
-  ChevronRight,
-  LightbulbIcon,
-  Loader2Icon,
-} from 'lucide-react';
+import { ArrowUp, ChevronLeft, ChevronRight, LightbulbIcon, Loader2Icon } from 'lucide-react';
+import MarkdownPreview from '@uiw/react-markdown-preview';
 import type { Question, Vacancy } from '@/models/entities';
 import { useEffect, useState } from 'react';
-import { Link } from '@tanstack/react-router';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useTranslation } from 'react-i18next';
 import { CodeEditor } from '@/components/custom/CodeEditor';
@@ -31,6 +24,8 @@ export default function QuestionPanel({
   explanationLoading,
   vacancyLoading,
   questionLoading,
+  currentQuestionIndex,
+  totalQuestions,
 }: {
   question?: Question;
   onAnswer: (a: string) => void;
@@ -45,6 +40,8 @@ export default function QuestionPanel({
   explanationLoading: boolean;
   vacancyLoading: boolean;
   questionLoading: boolean;
+  currentQuestionIndex?: number;
+  totalQuestions: number;
 }) {
   const [answer, setAnswer] = useState('');
   useEffect(() => {
@@ -58,27 +55,29 @@ export default function QuestionPanel({
   return (
     <div className="max-w-2xl mx-auto w-full flex flex-col gap-6 flex-1">
       <div className="flex flex-nowrap items-center sm:flex-row sm:items-center sm:justify-between gap-2">
-        <Link
-          to="/vacancies"
-          className="sm:text-sm text-2xl text-indigo-600 hover:underline flex items-center gap-1"
-        >
-          <span className="hidden sm:block">← {t('backToVacancies')}</span>
-          <Button variant="outline" className="flex items-center gap-1 sm:hidden">
-            <ArrowLeft className="w-5 h-5" />
-          </Button>
-        </Link>
-
         {/* --- Назва ролі вакансії --- */}
-        {vacancy && !vacancyLoading && (
-          <h3 className="text-xl font-semibold text-gray-800 text-center sm:text-left">
-            {vacancy.title}
-          </h3>
-        )}
-        {!vacancy || vacancyLoading ? <Skeleton className="h-[28px] w-[163px]" /> : null}
+        <div className="flex flex-row sm:items-center sm:justify-between w-full gap-1 text-left">
+          <div className="text-xl font-semibold text-gray-800 w-full">
+            {!vacancyLoading && vacancy ? (
+              vacancy.title
+            ) : (
+              <Skeleton className="h-[28px] w-[163px]" />
+            )}
+          </div>
+          <div className="text-sm text-gray-500 w-auto text-right shrink-0">
+            {!questionLoading && question ? (
+              <div>
+                {t('question')} {currentQuestionIndex || 0 + 1}/{totalQuestions}
+              </div>
+            ) : (
+              <Skeleton className="h-[20px] w-[60px]" />
+            )}
+          </div>
+        </div>
       </div>
 
       {/* --- Верхній інфо-блок --- */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div className="flex flex-row justify-between items-center sm:items-center gap-4">
         <div className="text-sm text-gray-600">
           {!vacancy || vacancyLoading ? (
             <Skeleton className="h-[40px] w-[163px]" />
@@ -181,7 +180,18 @@ export default function QuestionPanel({
           >
             {t('copy')}
           </button>
-          <div className="whitespace-pre-wrap text-sm text-yellow-900">{explanation}</div>
+          <div className="whitespace-pre-wrap text-sm text-yellow-900">
+            <MarkdownPreview
+              source={explanation}
+              style={{
+                backgroundColor: 'oklch(98.7% 0.026 102.212)', // Tailwind bg-yellow-100
+                color: '#713F12', // Tailwind text-yellow-900
+                padding: '1rem',
+                borderRadius: '0.375rem',
+              }}
+              className="text-yellow-900"
+            />
+          </div>
         </Card>
       )}
 
