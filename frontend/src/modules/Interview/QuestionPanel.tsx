@@ -1,7 +1,15 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
-import { ArrowLeft, ChevronLeft, ChevronRight, LightbulbIcon, Loader2Icon } from 'lucide-react';
+import {
+  ArrowLeft,
+  ArrowUp,
+  ChevronLeft,
+  ChevronRight,
+  LightbulbIcon,
+  Loader2Icon,
+  Send,
+} from 'lucide-react';
 import type { Question, Vacancy } from '@/models/entities';
 import { useEffect, useState } from 'react';
 import { Link } from '@tanstack/react-router';
@@ -45,6 +53,9 @@ export default function QuestionPanel({
   }, [question]);
   const { t } = useTranslation();
   const isValid = answer.length <= MAX_ANSWER_LEN;
+  const answerDisable =
+    answerLoading || answer === question?.answer || !answer || questionLoading || !isValid;
+  const explainDisable = explanationLoading || questionLoading || !!explanation;
   return (
     <div className="max-w-2xl mx-auto w-full flex flex-col gap-6 flex-1">
       <div className="flex flex-nowrap items-center sm:flex-row sm:items-center sm:justify-between gap-2">
@@ -104,24 +115,50 @@ export default function QuestionPanel({
       </Card>
 
       {/* --- Текстарія --- */}
-      {question?.question_type === 'coding' ? (
-        <CodeEditor
-          className={`min-h-[200px] max-h-[600px] resize-none flex-grow ${!isValid ? 'border border-2 border-red-500' : ''}`}
-          minHeight={'200px'}
-          placeholder={t('enter_answer')}
-          value={answer}
-          onChange={setAnswer}
-          language={question.prog_lang_code || 'other'}
-        />
-      ) : (
-        <Textarea
-          placeholder={t('enter_answer')}
-          className="min-h-[200px] resize-none flex-grow"
-          value={answer}
-          onChange={(e) => setAnswer(e.target.value)}
-          maxLength={MAX_ANSWER_LEN}
-        />
-      )}
+      <div className="relative">
+        {question?.question_type === 'coding' ? (
+          <CodeEditor
+            className={`min-h-[200px] max-h-[600px] resize-none flex-grow ${!isValid ? 'border border-2 border-red-500' : ''}`}
+            minHeight={'200px'}
+            placeholder={t('enter_answer')}
+            value={answer}
+            onChange={setAnswer}
+            language={question.prog_lang_code || 'other'}
+          />
+        ) : (
+          <Textarea
+            placeholder={t('enter_answer')}
+            className="min-h-[200px] resize-none flex-grow"
+            value={answer}
+            onChange={(e) => setAnswer(e.target.value)}
+            maxLength={MAX_ANSWER_LEN}
+          />
+        )}
+        <div className="block sm:hidden flex absolute bottom-2 right-2 z-3">
+          {explanationLoading || !explainDisable ? (
+            <Button
+              onClick={onExplain}
+              variant="outline"
+              className="text-muted-foreground hover:text-primary flex mr-2"
+            >
+              {explanationLoading ? (
+                <Loader2Icon className="animate-spin" />
+              ) : (
+                <LightbulbIcon className="h-2 w-2" />
+              )}
+            </Button>
+          ) : null}
+          <Button
+            variant="outline"
+            onClick={() => onAnswer(answer)}
+            disabled={answerDisable}
+            size="icon"
+            className="text-muted-foreground hover:text-primary flex"
+          >
+            <ArrowUp className="w-5 h-5" />
+          </Button>
+        </div>
+      </div>
 
       {/* --- Пояснення --- */}
       {explanation && (
@@ -144,26 +181,26 @@ export default function QuestionPanel({
       <div className="flex justify-between flex-nowrap gap-4 sm:grid sm:grid-cols-4 sm:gap-4 mt-auto">
         <Button
           variant="secondary"
+          className="hidden sm:block"
           onClick={onExplain}
-          disabled={explanationLoading || questionLoading || !!explanation}
+          disabled={explainDisable}
         >
           {explanationLoading ? <Loader2Icon className="animate-spin" /> : null}
           {t('explain')}
         </Button>
         <Button
+          className="hidden sm:block"
           onClick={() => onAnswer(answer)}
-          disabled={
-            answerLoading || answer === question?.answer || !answer || questionLoading || !isValid
-          }
+          disabled={answerDisable}
         >
           {answerLoading ? <Loader2Icon className="animate-spin" /> : null}
           {t('answer')}
         </Button>
-        <Button variant="outline" onClick={onPrev} disabled={disablePrev}>
+        <Button className="flex-1" variant="outline" onClick={onPrev} disabled={disablePrev}>
           <ChevronLeft className="sm:hidden w-4 h-4" />
           <span className="hidden sm:block">{t('back')}</span>
         </Button>
-        <Button variant="outline" onClick={onNext} disabled={disableNext}>
+        <Button className="flex-1" variant="outline" onClick={onNext} disabled={disableNext}>
           <ChevronRight className="sm:hidden w-4 h-4" />
           <span className="hidden sm:block">{t('forward')}</span>
         </Button>

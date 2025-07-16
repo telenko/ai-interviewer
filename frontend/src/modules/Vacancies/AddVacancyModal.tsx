@@ -1,3 +1,4 @@
+import { LanguageSelect } from '@/components/custom/LanguageSelect';
 import { Button } from '@/components/ui/button';
 import {
   DialogHeader,
@@ -9,7 +10,7 @@ import {
 import { Input } from '@/components/ui/input';
 import InterviewerApi from '@/services/InterviewerApi';
 import { useAddVacancyMutation } from '@/services/vacancyApi';
-import { Loader2Icon, PlusIcon, ClipboardPaste } from 'lucide-react';
+import { Loader2Icon, PlusIcon, ClipboardPaste, ArrowLeft } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -23,14 +24,13 @@ export default function AddVacancyModal({ open, onClose }: { open: boolean; onCl
   const [addVacancy, { isLoading: vacancyCreationLoading }] = useAddVacancyMutation();
   const { t } = useTranslation();
 
-  const isValid = !!title && skills.length > 0;
+  const isValid = !!title && (skills.length > 0 || !!inputSkill);
 
   const onAutofill = async () => {
     setLoadingFromUrl(true);
     if (!url) {
       return;
     }
-    // Симуляція запиту
     try {
       const response = await InterviewerApi.post('/vacancy-session', {
         operation: 'generate_vacancy',
@@ -59,16 +59,26 @@ export default function AddVacancyModal({ open, onClose }: { open: boolean; onCl
 
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
-      <DialogContent className="w-full h-screen max-w-none rounded-none sm:max-w-lg sm:h-auto sm:rounded-xl">
-        <DialogHeader>
-          <DialogTitle>{t('new_vacancy')}</DialogTitle>
+      <DialogContent className="w-full h-screen overflow-y-auto max-w-none rounded-none sm:max-w-lg sm:h-auto sm:rounded-xl">
+        <DialogHeader className="flex flex-row items-center justify-between px-1 sm:px-0">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onClose}
+            className="absolute left-5 sm:hidden"
+          >
+            <ArrowLeft className="w-5 h-5" />
+          </Button>
+          <DialogTitle className="text-3xl sm:text-2xl font-semibold flex-1 text-center sm:text-left w-full">
+            {t('new_vacancy')}
+          </DialogTitle>
         </DialogHeader>
 
-        <div className="flex flex-col space-y-5">
+        <div className="flex flex-col space-y-5 pb-4 pt-2 mt-0">
           {/* URL + кнопка */}
           <div className="flex gap-2 relative">
             <Input
-              className="py-8 blink-green-border placeholder:text-lg pr-15 sm:pr-4"
+              className="py-6 blink-green-border placeholder:text-base pr-15 sm:pr-4"
               placeholder={t('gentle_url_placeh')}
               value={url}
               onChange={(e) => setUrl(e.target.value)}
@@ -94,7 +104,7 @@ export default function AddVacancyModal({ open, onClose }: { open: boolean; onCl
               <Button
                 variant="secondary"
                 onClick={onAutofill}
-                className="h-16 text-lg"
+                className="h-12 text-base"
                 disabled={loadingFromUrl}
               >
                 {loadingFromUrl ? <Loader2Icon className="w-4 h-4 animate-spin" /> : t('generate')}
@@ -136,7 +146,7 @@ export default function AddVacancyModal({ open, onClose }: { open: boolean; onCl
                   {skill}
                   <button
                     onClick={() => removeSkill(skill)}
-                    className="text-indigo-600 hover:text-red-500"
+                    className="text-indigo-600 hover:text-red-500 text-[10px]"
                   >
                     ✕
                   </button>
@@ -146,11 +156,7 @@ export default function AddVacancyModal({ open, onClose }: { open: boolean; onCl
           </div>
 
           {/* Lang_code */}
-          <Input
-            placeholder={t('lang_code')}
-            value={langCode}
-            onChange={(e) => setLangCode(e.target.value)}
-          />
+          <LanguageSelect value={langCode} onChange={setLangCode} />
         </div>
         <DialogFooter className="mt-4">
           <Button onClick={onClose} variant="outline">
@@ -161,7 +167,7 @@ export default function AddVacancyModal({ open, onClose }: { open: boolean; onCl
               addVacancy({
                 langCode,
                 title,
-                skills,
+                skills: skills.length > 0 ? skills : [inputSkill],
                 url,
               }).then((e) => (!e.error ? onClose() : null));
             }}

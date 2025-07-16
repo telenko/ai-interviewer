@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Suspense, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import CodeMirror from '@uiw/react-codemirror';
 import { EditorView } from '@codemirror/view';
 import type { ProgLangEnum } from '@/models/entities';
@@ -12,7 +12,6 @@ interface Props {
   language: SupportedLanguage;
   className?: string;
   placeholder?: string;
-  maxLength?: number;
   minHeight?: string;
 }
 
@@ -32,7 +31,6 @@ export const CodeEditor: React.FC<Props> = ({
   language,
   className,
   placeholder,
-  maxLength,
   minHeight,
 }) => {
   const [extensions, setExtensions] = useState<any[]>([]);

@@ -11,7 +11,6 @@ import { Provider } from 'react-redux';
 import { AuthProvider } from 'react-oidc-context';
 import { store } from './store';
 import '../i18n';
-import Secured from './modules/Auth';
 
 // Create a new router instance
 const router = createRouter({

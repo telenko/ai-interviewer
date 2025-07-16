@@ -1,4 +1,3 @@
-import { Button } from '@/components/ui/button';
 import { useCallback, useEffect } from 'react';
 import { useAuth, type AuthContextProps } from 'react-oidc-context';
 
@@ -24,8 +23,6 @@ export default function Secured(props: React.PropsWithChildren) {
   useEffect(() => {
     authContainer = auth;
   }, [auth]);
-
-  const signOutRedirect = useSignoutCallback();
 
   switch (auth.activeNavigator) {
     case 'signinSilent':

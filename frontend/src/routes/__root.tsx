@@ -8,7 +8,7 @@ export const Route = createRootRoute({
     <>
       <div className="min-h-screen flex flex-col">
         <Header />
-        <main className="flex-1 p-4 h-[calc(100vh-64px)] flex flex-col">
+        <main className="flex-1 p-4 flex-1 overflow-auto flex flex-col">
           <Secured>
             <Outlet />
           </Secured>

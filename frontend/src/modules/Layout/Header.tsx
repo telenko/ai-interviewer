@@ -4,6 +4,7 @@ import { Menu, LogIn, LogOut } from 'lucide-react';
 import { useAuth } from 'react-oidc-context';
 import { useSignoutCallback } from '../Auth';
 import { useTranslation } from 'react-i18next';
+import { Breadcrumbs } from './BreadCrumbs';
 
 export function Header() {
   const auth = useAuth();
@@ -11,7 +12,7 @@ export function Header() {
   const { t } = useTranslation();
 
   return (
-    <header className="flex items-center justify-between px-4 py-3 border-b">
+    <header className="flex items-center justify-between px-4 py-3 border-b sticky top-0 right-0 left-0 z-50 bg-white border-b shadow-sm px-4 py-2">
       {/* Mobile menu */}
       <div className="md:hidden">
         <Sheet>
@@ -59,7 +60,10 @@ export function Header() {
       </div>
 
       {/* Logo or title */}
-      <div className="text-lg font-semibold">{t('app')}</div>
+      <div className="text-lg font-semibold flex flex-row space-x-2 items-center">
+        <p>{t('app')}</p>
+        <Breadcrumbs />
+      </div>
 
       {/* User section */}
       <div className="flex items-center space-x-4">
