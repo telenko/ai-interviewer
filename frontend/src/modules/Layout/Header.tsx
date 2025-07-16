@@ -4,7 +4,7 @@ import { Menu, LogIn, LogOut } from 'lucide-react';
 import { useAuth } from 'react-oidc-context';
 import { useSignoutCallback } from '../Auth';
 import { useTranslation } from 'react-i18next';
-import { Breadcrumbs } from './BreadCrumbs';
+import { Breadcrumbs } from './Breadcrumbs';
 
 export function Header() {
   const auth = useAuth();

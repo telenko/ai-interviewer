@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input';
 import InterviewerApi from '@/services/InterviewerApi';
 import { useAddVacancyMutation } from '@/services/vacancyApi';
 import { Loader2Icon, PlusIcon, ClipboardPaste, ArrowLeft } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export default function AddVacancyModal({ open, onClose }: { open: boolean; onClose: () => void }) {
@@ -25,6 +25,23 @@ export default function AddVacancyModal({ open, onClose }: { open: boolean; onCl
   const { t } = useTranslation();
 
   const isValid = !!title && (skills.length > 0 || !!inputSkill);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const handlePopState = (e: PopStateEvent) => {
+      e.preventDefault();
+      onClose();
+      window.history.pushState(null, '', window.location.href); // блокуємо навігацію назад
+    };
+
+    window.history.pushState(null, '', window.location.href); // додаємо новий запис в історію
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [open, onClose]);
 
   const onAutofill = async () => {
     setLoadingFromUrl(true);
@@ -62,7 +79,7 @@ export default function AddVacancyModal({ open, onClose }: { open: boolean; onCl
       <DialogContent className="w-full h-screen overflow-y-auto max-w-none rounded-none sm:max-w-lg sm:h-auto sm:rounded-xl">
         <DialogHeader className="flex flex-row items-center justify-between px-1 sm:px-0">
           <Button
-            variant="ghost"
+            variant="outline"
             size="icon"
             onClick={onClose}
             className="absolute left-5 sm:hidden"

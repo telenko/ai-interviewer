@@ -8,7 +8,6 @@ import {
   ChevronRight,
   LightbulbIcon,
   Loader2Icon,
-  Send,
 } from 'lucide-react';
 import type { Question, Vacancy } from '@/models/entities';
 import { useEffect, useState } from 'react';
@@ -52,9 +51,9 @@ export default function QuestionPanel({
     setAnswer(question?.answer ?? '');
   }, [question]);
   const { t } = useTranslation();
-  const isValid = answer.length <= MAX_ANSWER_LEN;
+  const isValidAnswer = answer.length <= MAX_ANSWER_LEN;
   const answerDisable =
-    answerLoading || answer === question?.answer || !answer || questionLoading || !isValid;
+    answerLoading || answer === question?.answer || !answer || questionLoading || !isValidAnswer;
   const explainDisable = explanationLoading || questionLoading || !!explanation;
   return (
     <div className="max-w-2xl mx-auto w-full flex flex-col gap-6 flex-1">
@@ -115,10 +114,10 @@ export default function QuestionPanel({
       </Card>
 
       {/* --- Текстарія --- */}
-      <div className="relative">
+      <div className="relative flex-grow flex flex-col">
         {question?.question_type === 'coding' ? (
           <CodeEditor
-            className={`min-h-[200px] max-h-[600px] resize-none flex-grow ${!isValid ? 'border border-2 border-red-500' : ''}`}
+            className={`min-h-[200px] max-h-[600px] resize-none flex-grow ${!isValidAnswer ? 'border border-2 border-red-500' : ''}`}
             minHeight={'200px'}
             placeholder={t('enter_answer')}
             value={answer}
@@ -158,6 +157,15 @@ export default function QuestionPanel({
             <ArrowUp className="w-5 h-5" />
           </Button>
         </div>
+        {!isValidAnswer ? (
+          <p className="mt-1 text-sm text-red-600" role="alert">
+            {t('answer_too_long_error', { amount: MAX_ANSWER_LEN })}
+          </p>
+        ) : (
+          <p className="hidden sm:block text-gray-600 mt-1 text-sm absolute right-3 bottom-3">
+            {answer.length}/{MAX_ANSWER_LEN}
+          </p>
+        )}
       </div>
 
       {/* --- Пояснення --- */}

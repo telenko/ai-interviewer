@@ -1,10 +1,12 @@
--
--
-3. mobile layout gen (send/answer actions, modal, skeletons fix, etc)
-4. desktop layout fixes (skeletons, numerator of qu)
-5. auth layout + refactor
-6. [DONE] !!input security (max len for title, skill, max amount of skills, max answer len, max vacancies amount)
-7. [BACKEND_TEST][BACKEND_DONE] !!coding type for questions + CodeMirror?
-8. Monitoring integration - Engagement, Retention, CTR
-9. [BASIC][COMBOBOX_AUTOCOMPLETE_RECOMMENDED] Language selection for interview
-10. Generation bug - skill length too big
+
+- Monitoring integration - Engagement, Retention, CTR
+- UI bugs/next: 
+    -- i18n, 
+    -- md viewer, 
+    -- numerator of qu, 
+    -- skeletons, 
+    -- vacancy card relayout, 
+    -- welcome page + icon brand, 
+    -- add_v button change, 
+    -- mobile bottom bug, 
+    -- loaders auth fix from text

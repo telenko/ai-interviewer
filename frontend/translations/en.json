@@ -12,6 +12,7 @@
         "copy": "Copy",
         "explain": "Explain",
         "answer": "Answer",
+        "answer_too_long_error": "Answer should be less than {{amount}} characters",
         "back": "Back",
         "forward": "Next",
         "removeVacancyWarn": "Are you sure you want to remove the vacancy?",

@@ -29,7 +29,19 @@ export function LanguageSelect({
           {selected ? `${selected.native} (${selected.english})` : 'Select language'}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[380px] m:w-[200px] p-0">
+      <PopoverContent
+        className="min-w-full
+                    max-h-[60vh] 
+                    overflow-auto 
+                    sm:w-[380px] 
+                    sm:max-h-[400px]
+                    p-0
+                    top-full
+                    sm:top-auto"
+        side="bottom"
+        align="start"
+        sideOffset={4}
+      >
         <Command>
           <CommandInput placeholder="Search language..." />
           <CommandEmpty>No language found.</CommandEmpty>
