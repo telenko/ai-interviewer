@@ -26,6 +26,15 @@
         "generate": "Generate",
         "vacancy_name": "Vacancy name",
         "enter_skills": "Enter skill...",
-        "save": "Save"
+        "save": "Save",
+        "about": {
+            "title": "About This App",
+            "appGeneral": "This app helps you prepare for job interviews in a structured and interactive way. You can track your progress, score your answers, and practice realistic questions tailored to your role.",
+            "appSecondary": "Built using modern web technologies like React, Tailwind CSS, TanStack Router, and shadcn/ui, the app is designed for speed, simplicity, and user focus.",
+            "authorTitle": "About the Author",
+            "authorGeneral": "Hi! I'm Andrii Telenko, a software engineer passionate about building clean, accessible, and AI-assisted tools that help people grow. I love React, serverless technologies, and UI/UX design.",
+            "authorSecondary": "In my free time, I enjoy creating side projects, exploring tech trends, and spending time with my daughter.",
+            "helpUkraine": "Help Ukraine"
+        }
     }
 }
