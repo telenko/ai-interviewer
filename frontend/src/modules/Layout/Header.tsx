@@ -6,19 +6,11 @@ import { useSignoutCallback } from '../Auth';
 import { useTranslation } from 'react-i18next';
 import { Breadcrumbs } from './Breadcrumbs';
 import { Link } from '@tanstack/react-router';
-import { WelcomePage } from './WelcomePage';
 
 export function Header() {
   const auth = useAuth();
   const signoutCb = useSignoutCallback();
   const { t } = useTranslation();
-
-  if (auth.isLoading) {
-    return null; // TODO LOADER
-  }
-  if (!auth.isAuthenticated) {
-    return <WelcomePage />;
-  }
 
   return (
     <header className="flex items-center justify-between px-4 py-3 border-b sticky top-0 right-0 left-0 z-50 bg-white border-b shadow-sm px-4 py-2">

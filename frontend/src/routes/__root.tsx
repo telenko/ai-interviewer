@@ -1,10 +1,20 @@
 import Secured from '@/modules/Auth';
 import { Header } from '@/modules/Layout/Header';
+import { WelcomePage } from '@/modules/Layout/WelcomePage';
 import { Outlet, createRootRoute } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
+import { useAuth } from 'react-oidc-context';
 
-export const Route = createRootRoute({
-  component: () => (
+const BaseLayout = () => {
+  const auth = useAuth();
+  if (auth.isLoading) {
+    return null; // TODO LOADER
+  }
+  if (!auth.isAuthenticated) {
+    return <WelcomePage />;
+  }
+
+  return (
     <>
       <div className="min-h-screen flex flex-col">
         <Header />
@@ -16,5 +26,9 @@ export const Route = createRootRoute({
       </div>
       <TanStackRouterDevtools />
     </>
-  ),
+  );
+};
+
+export const Route = createRootRoute({
+  component: BaseLayout,
 });

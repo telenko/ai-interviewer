@@ -9,3 +9,4 @@
     -- aws pages login styling i18n
     -- axe devtools
     -- langselect consider using more read cmp
+    -- validation skill length/skills/title length

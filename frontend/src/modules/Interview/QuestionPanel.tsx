@@ -2,13 +2,13 @@ import { Button } from '@/components/ui/button';
 import { Card, CardHeader } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { ArrowUp, ChevronLeft, ChevronRight, LightbulbIcon, Loader2Icon } from 'lucide-react';
-import MarkdownPreview from '@uiw/react-markdown-preview';
 import type { Question, Vacancy } from '@/models/entities';
 import { useEffect, useState } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useTranslation } from 'react-i18next';
 import { CodeEditor } from '@/components/custom/CodeEditor';
 import { MAX_ANSWER_LEN } from '@/config/limits';
+import LazyMarkdownPreview from '@/components/custom/LazyMarkdownPreview';
 
 export default function QuestionPanel({
   vacancy,
@@ -126,7 +126,7 @@ export default function QuestionPanel({
         ) : (
           <Textarea
             placeholder={t('enter_answer')}
-            className="min-h-[200px] resize-none flex-grow"
+            className="min-h-[200px] resize-none flex-grow bg-white"
             value={answer}
             onChange={(e) => setAnswer(e.target.value)}
             maxLength={MAX_ANSWER_LEN}
@@ -181,7 +181,7 @@ export default function QuestionPanel({
             {t('copy')}
           </button>
           <div className="whitespace-pre-wrap text-sm text-yellow-900">
-            <MarkdownPreview
+            <LazyMarkdownPreview
               source={explanation}
               style={{
                 backgroundColor: 'oklch(98.7% 0.026 102.212)', // Tailwind bg-yellow-100

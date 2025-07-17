@@ -39,13 +39,5 @@ export default function Secured(props: React.PropsWithChildren) {
     return <div>Encountering error... {auth.error.message}</div>;
   }
 
-  return (
-    <>
-      {auth.isAuthenticated ? (
-        props.children
-      ) : (
-        <p className="p-4">Not logged in. Please click sign in to proceed</p>
-      )}
-    </>
-  );
+  return <>{auth.isAuthenticated ? props.children : null}</>;
 }
