@@ -2,10 +2,10 @@
 - Monitoring integration - Engagement, Retention, CTR
 - UI bugs/next: 
     -- i18n,
-    -- skeletons, 
-    -- vacancy card relayout, 
-    -- welcome page + icon brand, 
-    -- add_v button change, 
+    -- icon brand, 
     -- mobile bottom bug, 
     -- loaders auth fix from text
-    -- interview buttons desktop bug with loader
+    -- notes/imps in phone
+    -- aws pages login styling i18n
+    -- axe devtools
+    -- langselect consider using more read cmp

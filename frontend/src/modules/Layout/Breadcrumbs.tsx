@@ -12,7 +12,7 @@ export const Breadcrumbs = () => {
     const baseItems = [
       {
         url: '/vacancies',
-        label: 'Vacancies',
+        label: 'Home',
       },
     ];
 
@@ -43,7 +43,11 @@ export const Breadcrumbs = () => {
                 <ChevronRight className="w-4 h-4 mx-2" />
               </>
             ) : (
-              <span aria-current="page">{item.label}</span>
+              <span aria-current="page">
+                <Link to={item.url} className="hover:underline">
+                  {item.label}
+                </Link>
+              </span>
             )}
           </span>
         );

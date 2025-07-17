@@ -2,7 +2,6 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
   CardFooter,
@@ -12,7 +11,7 @@ import {
 import { Label } from '@/components/ui/label';
 import type { Vacancy } from '@/models/entities';
 import { Link } from '@tanstack/react-router';
-import { DeleteIcon, Loader2Icon, TrashIcon } from 'lucide-react';
+import { Loader2Icon, TrashIcon } from 'lucide-react';
 import './styles.css';
 import {
   AlertDialog,
@@ -40,11 +39,11 @@ export default function VacancyCard({ vacancy }: { vacancy: Vacancy }) {
   const badgeMediumClass = 'bg-blue-500 text-white dark:bg-blue-600';
   const badgeWeakClass = 'bg-gray-500 text-white dark:bg-gray-600';
   return (
-    <Card className="w-full h-[290px] flex flex-col">
+    <Card className="w-full h-[290px] flex flex-col gap-2">
       <CardHeader className="pb-2 flex-shrink-0">
-        <div className="flex justify-between items-start gap-2">
+        <div className="flex justify-between items-start gap-2 overflow-hidden">
           <div className="flex-1 overflow-hidden">
-            <CardTitle className="text-base truncate leading-tight">{vacancy.title}</CardTitle>
+            <CardTitle className="text-base truncate leading-tight mb-2">{vacancy.title}</CardTitle>
 
             <CardDescription className="text-sm text-muted-foreground truncate leading-snug max-h-[2.5rem]">
               {vacancy.skills.slice(0, 5).join(', ')}
@@ -56,7 +55,7 @@ export default function VacancyCard({ vacancy }: { vacancy: Vacancy }) {
                   href={vacancy.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block text-xs text-blue-800 bg-blue-100 px-1 py-0.5 rounded truncate whitespace-nowrap overflow-hidden text-ellipsis w-full"
+                  className="block text-xs text-blue-800 bg-blue-100 px-1 py-0.5 rounded overflow-hidden text-ellipsis whitespace-nowrap w-full max-w-full"
                   title={vacancy.url}
                 >
                   {vacancy.url}
@@ -91,30 +90,28 @@ export default function VacancyCard({ vacancy }: { vacancy: Vacancy }) {
         </div>
       </CardHeader>
 
-      <CardContent className="flex flex-col gap-4 text-sm flex-grow justify-between">
+      <CardContent className="flex flex-col gap-1 text-sm flex-grow justify-between">
         {/* Прогрес */}
-        <div className="flex justify-between items-center h-[40px]">
-          <Label className="text-xs text-muted-foreground truncate">{t('progress_colon')}</Label>
-          <div className="flex items-center gap-2 w-full max-w-[180px]">
-            <Progress
-              value={vacancy.progress * 100}
-              className={cn(
-                'h-2 rounded flex-grow',
-                vacancy.progress >= 0.8
-                  ? 'bg-green-100 [&>div]:bg-green-500'
-                  : vacancy.progress >= 0.4
-                    ? 'bg-indigo-100 [&>div]:bg-indigo-500'
-                    : 'bg-gray-100 [&>div]:bg-gray-400',
-              )}
-            />
-            <span className="text-xs text-muted-foreground min-w-[35px] text-right">
-              {(vacancy.progress * 100).toFixed(1)}%
-            </span>
-          </div>
+        <div className="flex items-center gap-2 w-full h-[40px]">
+          <Progress
+            value={vacancy.progress * 100}
+            className={cn(
+              'h-2 rounded flex-grow',
+              'flex-1',
+              vacancy.progress >= 0.8
+                ? 'bg-green-100 [&>div]:bg-green-500'
+                : vacancy.progress >= 0.4
+                  ? 'bg-indigo-100 [&>div]:bg-indigo-500'
+                  : 'bg-gray-100 [&>div]:bg-gray-400',
+            )}
+          />
+          <span className="text-xs text-muted-foreground min-w-[35px] text-right">
+            {(vacancy.progress * 100).toFixed(1)}%
+          </span>
         </div>
 
         {/* Score */}
-        <div className="flex justify-between items-center h-[40px]">
+        <div className="flex gap-3 items-center h-[40px]">
           <Label className="text-xs text-muted-foreground truncate">{t('score_colon')}</Label>
           <Badge
             variant="secondary"
@@ -142,27 +139,25 @@ export default function VacancyCard({ vacancy }: { vacancy: Vacancy }) {
 
 export const VacancyCardSkeleton = () => {
   return (
-    <Card className="w-full h-[290px] flex flex-col">
-      <CardHeader className="pb-2 flex-shrink-0">
+    <Card className="w-full h-[290px] flex flex-col gap-2">
+      <CardHeader className="pb-2 flex-shrink-0 overflow-hidden">
         <div className="flex justify-between items-start gap-2">
           <div className="flex-1 space-y-1 overflow-hidden">
-            <Skeleton className="h-4 w-3/4" />
-            <Skeleton className="h-3 w-full" />
-            <Skeleton className="h-3 w-5/6" />
+            <Skeleton className="h-4 w-3/4 mb-3" />
+            <Skeleton className="h-3 w-5/6 mb-2" />
             <Skeleton className="h-[1.5rem] w-full rounded bg-blue-100" />
           </div>
           <Skeleton className="w-6 h-6 rounded-full" />
         </div>
       </CardHeader>
 
-      <CardContent className="flex flex-col gap-4 flex-grow justify-between">
+      <CardContent className="flex flex-col gap-2 flex-grow justify-between">
         <div className="flex justify-between items-center h-[40px]">
-          <Skeleton className="h-3 w-1/4" />
-          <Skeleton className="h-2 w-2/3" />
+          <Skeleton className="h-2 w-2/3 w-full mt-1" />
         </div>
 
-        <div className="flex justify-between items-center h-[40px]">
-          <Skeleton className="h-3 w-1/4" />
+        <div className="flex gap-3 items-center h-[40px] mt-">
+          <Skeleton className="h-3 w-1/6" />
           <Skeleton className="h-5 w-8 rounded-full" />
         </div>
       </CardContent>

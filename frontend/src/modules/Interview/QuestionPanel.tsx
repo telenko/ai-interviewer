@@ -56,7 +56,7 @@ export default function QuestionPanel({
     <div className="max-w-2xl mx-auto w-full flex flex-col gap-6 flex-1">
       <div className="flex flex-nowrap items-center sm:flex-row sm:items-center sm:justify-between gap-2">
         {/* --- Назва ролі вакансії --- */}
-        <div className="flex flex-row sm:items-center sm:justify-between w-full gap-1 text-left">
+        <div className="flex flex-row items-center sm:justify-between w-full gap-1 text-left">
           <div className="text-xl font-semibold text-gray-800 w-full">
             {!vacancyLoading && vacancy ? (
               vacancy.title
@@ -77,7 +77,7 @@ export default function QuestionPanel({
       </div>
 
       {/* --- Верхній інфо-блок --- */}
-      <div className="flex flex-row justify-between items-center sm:items-center gap-4">
+      <div className="flex flex-row justify-between items-start gap-4">
         <div className="text-sm text-gray-600">
           {!vacancy || vacancyLoading ? (
             <Skeleton className="h-[40px] w-[163px]" />
@@ -199,7 +199,7 @@ export default function QuestionPanel({
       <div className="flex justify-between flex-nowrap gap-4 sm:grid sm:grid-cols-4 sm:gap-4 mt-auto">
         <Button
           variant="secondary"
-          className="hidden sm:block"
+          className="hidden sm:flex"
           onClick={onExplain}
           disabled={explainDisable}
         >
@@ -207,7 +207,7 @@ export default function QuestionPanel({
           {t('explain')}
         </Button>
         <Button
-          className="hidden sm:block"
+          className="hidden sm:flex"
           onClick={() => onAnswer(answer)}
           disabled={answerDisable}
         >
