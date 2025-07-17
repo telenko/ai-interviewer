@@ -1,13 +1,11 @@
 import React, { useMemo } from 'react';
 import { useMatches, Link } from '@tanstack/react-router';
-import { ChevronRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
-  BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 
