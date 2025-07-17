@@ -1,9 +1,19 @@
-import { useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { useMatches, Link } from '@tanstack/react-router';
 import { ChevronRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
 
-export const Breadcrumbs = () => {
+export const Breadcrumbs = (props: { className?: string }) => {
   const matches = useMatches();
+  const { t } = useTranslation();
 
   // Знайдемо матч маршруту за id або path — наприклад, по id
   const interviewMatch = matches.find((m) => m.fullPath === '/interview/$vacancySK');
@@ -12,14 +22,14 @@ export const Breadcrumbs = () => {
     const baseItems = [
       {
         url: '/vacancies',
-        label: 'Home',
+        label: t('navigation.home'),
       },
     ];
 
     if (interviewMatch) {
       baseItems.push({
         url: interviewMatch.pathname,
-        label: 'Interview',
+        label: t('navigation.interview'),
       });
     }
 
@@ -27,31 +37,36 @@ export const Breadcrumbs = () => {
   }, [interviewMatch]);
 
   return (
-    <nav
-      aria-label="Breadcrumb"
-      className="text-sm text-gray-600 items-center mt-1 ml-10 hidden sm:flex"
-    >
-      {items.map((item, index) => {
-        const isLast = index === items.length - 1;
-        return (
-          <span key={item.label} className="flex items-center">
-            {!isLast ? (
-              <>
-                <Link to={item.url} className="hover:underline">
-                  {item.label}
-                </Link>
-                <ChevronRight className="w-4 h-4 mx-2" />
-              </>
-            ) : (
-              <span aria-current="page">
-                <Link to={item.url} className="hover:underline">
-                  {item.label}
-                </Link>
-              </span>
-            )}
-          </span>
-        );
-      })}
-    </nav>
+    <Breadcrumb {...props}>
+      <BreadcrumbList>
+        {items.map((item, index) => {
+          const isLast = index === items.length - 1;
+          if (isLast) {
+            return (
+              <BreadcrumbItem key={`breadcrumb-fragment-${item.url}`}>
+                <BreadcrumbLink asChild>
+                  <Link to={item.url} className="hover:underline">
+                    {item.label}
+                  </Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+            );
+          } else {
+            return (
+              <React.Fragment key={`breadcrumb-fragment-${item.url}`}>
+                <BreadcrumbItem>
+                  <BreadcrumbLink asChild>
+                    <Link to={item.url} className="hover:underline">
+                      {item.label}
+                    </Link>
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+              </React.Fragment>
+            );
+          }
+        })}
+      </BreadcrumbList>
+    </Breadcrumb>
   );
 };

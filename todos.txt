@@ -1,7 +1,6 @@
 
 - Monitoring integration - Engagement, Retention, CTR
 - UI bugs/next: 
-    -- i18n,
     -- icon brand, 
     -- mobile bottom bug, 
     -- loaders auth fix from text

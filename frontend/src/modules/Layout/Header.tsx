@@ -26,7 +26,7 @@ export function Header() {
             {/* Top part: user info */}
             <div className="space-y-4">
               <div>
-                <p className="text-sm text-muted-foreground">Current user</p>
+                <p className="text-sm text-muted-foreground">{t('navigation.user')}</p>
                 <p className="font-medium break-all">
                   {auth.user?.profile?.email ?? 'Not logged in'}
                 </p>
@@ -34,11 +34,11 @@ export function Header() {
 
               {/* Optional: додаткові навігаційні лінки */}
               <nav className="flex flex-col space-y-2">
-                <a href="/" className="text-sm hover:underline">
-                  Home
+                <a href="/" className="text-lg hover:underline">
+                  {t('navigation.home')}
                 </a>
-                <a href="/about" className="text-sm hover:underline">
-                  About
+                <a href="/about" className="text-lg hover:underline">
+                  {t('navigation.about')}
                 </a>
               </nav>
             </div>
@@ -52,7 +52,7 @@ export function Header() {
                   onClick={signoutCb}
                   className="w-full justify-start"
                 >
-                  <LogOut className="w-4 h-4 mr-2" /> Logout
+                  <LogOut className="w-4 h-4 mr-2" /> {t('navigation.logout')}
                 </Button>
               </div>
             )}
@@ -63,7 +63,7 @@ export function Header() {
       {/* Logo or title */}
       <div className="text-lg font-semibold flex flex-row space-x-2 items-center">
         <p>{t('app')}</p>
-        <Breadcrumbs />
+        <Breadcrumbs className="ml-5 hidden sm:block" />
       </div>
 
       {/* User section */}
@@ -72,18 +72,18 @@ export function Header() {
           to="/about"
           className="hidden sm:block text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
         >
-          About
+          {t('navigation.about')}
         </Link>
         {auth.isAuthenticated ? (
           <>
             <span className="text-sm hidden md:inline">{auth.user?.profile.email}</span>
             <Button variant="outline" size="sm" onClick={signoutCb}>
-              <LogOut className="w-4 h-4 mr-1" /> Logout
+              <LogOut className="w-4 h-4 mr-1" /> {t('navigation.logout')}
             </Button>
           </>
         ) : (
           <Button variant="outline" size="sm" onClick={() => auth.signinRedirect()}>
-            <LogIn className="w-4 h-4 mr-1" /> Login
+            <LogIn className="w-4 h-4 mr-1" /> {t('navigation.login')}
           </Button>
         )}
       </div>

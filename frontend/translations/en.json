@@ -35,6 +35,18 @@
             "authorGeneral": "Hi! I'm Andrii Telenko, a software engineer passionate about building clean, accessible, and AI-assisted tools that help people grow. I love React, serverless technologies, and UI/UX design.",
             "authorSecondary": "In my free time, I enjoy creating side projects, exploring tech trends, and spending time with my daughter.",
             "helpUkraine": "Help Ukraine"
+        },
+        "welcome": {
+            "title": "Start Your New Journey with AI Interviews",
+            "subTitle": "Practice, grow, get feedback, and prepare for your dream job.",
+            "login": "Sign Up / Sign In"
+        },
+        "navigation": {
+            "home": "Home",
+            "interview": "Interview",
+            "logout": "Logout",
+            "about": "About",
+            "user": "User"
         }
     }
 }
