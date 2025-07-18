@@ -47,6 +47,16 @@ Resources:
                 - !Ref AuthClientID
               issuer: !Ref AuthIssuerURL
 
+  InterviewerHttpApiStage:
+    Type: AWS::ApiGatewayV2::Stage
+    Properties:
+      ApiId: !Ref InterviewerHttpApi
+      StageName: interviewer-stage
+      AutoDeploy: true
+      DefaultRouteSettings:
+        ThrottlingBurstLimit: 200
+        ThrottlingRateLimit: 100
+
   InterviewerTable:
     Type: AWS::DynamoDB::Table
     DeletionPolicy: Retain

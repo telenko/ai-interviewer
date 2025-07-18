@@ -32,6 +32,7 @@ class AnalyzeVacancyOutput(BaseModel):
 
 def analyze_vacancy(vacancy: Vacancy) -> Optional[AnalyzeVacancyOutput]:
     client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
     response = client.chat.completions.parse(
         model="gpt-4o-mini",
         response_format=AnalyzeVacancyOutput,
