@@ -16,7 +16,12 @@ import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
 const ErrorLayout = (props: { msg: string }) => (
-  <p className="mt-1 text-sm text-red-600 absolute bottom-[-18px] left-2">{props.msg}</p>
+  <p
+    className="mt-1 text-sm text-red-600 break-words sm:absolute bottom-[-18px] left-2 max-w-[300px] sm:max-w-full"
+    title={props.msg}
+  >
+    {props.msg}
+  </p>
 );
 
 export default function AddVacancyModal({ open, onClose }: { open: boolean; onClose: () => void }) {
