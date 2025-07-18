@@ -93,6 +93,8 @@ export function AutoComplete<T extends string>({
             avoidCollisions={false}
             collisionPadding={0}
             onWheel={(e) => e.stopPropagation()}
+            onTouchStart={(e) => e.stopPropagation()}
+            onTouchMove={(e) => e.stopPropagation()}
             side="bottom"
             asChild
             onOpenAutoFocus={(e) => e.preventDefault()}

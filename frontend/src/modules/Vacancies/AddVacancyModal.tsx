@@ -175,7 +175,8 @@ export default function AddVacancyModal({ open, onClose }: { open: boolean; onCl
           {/* Lang_code */}
           <LanguageSelect value={langCode} onChange={setLangCode} className="mt-[-8px]" />
         </div>
-        <DialogFooter className="mt-4">
+        {/* on some mobile devices bottom of footer not visible, so adding mb-4 */}
+        <DialogFooter className="mt-4 mb-4 sm:mb-0">
           <Button onClick={onClose} variant="outline">
             {t('cancel')}
           </Button>
