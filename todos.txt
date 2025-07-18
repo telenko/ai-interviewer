@@ -6,4 +6,3 @@
     -- loaders auth fix from text
     -- notes/imps in phone
     -- axe devtools
-    -- validation skill length/skills/title length

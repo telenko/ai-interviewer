@@ -30,6 +30,15 @@
         "language": {
             "placeholder": "Select language (optional)"
         },
+        "createVacancy": {
+            "errors": {
+                "title": "The title must be between {{min}} and {{max}} characters long.",
+                "skill": "Each skill must be between {{min}} and {{max}} characters long.",
+                "skillsMax": "You can add up to {{max}} skills only.",
+                "skillsMin": "Please add at least {{min}} skills.",
+                "url": "Please enter a valid URL (starting with http:// or https://)."
+            }
+        },
         "about": {
             "title": "About This App",
             "appGeneral": "This app helps you prepare for job interviews in a structured and interactive way. You can track your progress, score your answers, and practice realistic questions tailored to your role.",
