@@ -1,71 +1,34 @@
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from '@/components/ui/command';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Button } from '@/components/ui/button';
-import { Check } from 'lucide-react';
 import { useState } from 'react';
-import { cn } from '@/lib/utils';
 import { languages } from '@/models/languages';
+import { AutoComplete } from './Autocomplete';
+import { useTranslation } from 'react-i18next';
 
 export function LanguageSelect({
   value,
   onChange,
+  className,
 }: {
   value?: string;
   onChange: (code: string) => void;
+  className?: string;
 }) {
-  const [open, setOpen] = useState(false);
-  const selected = languages.find((l) => l.code === value);
-
+  const [searchValue, setSearchValue] = useState('');
+  const { t } = useTranslation();
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button variant="outline" role="combobox" className="w-full justify-between">
-          {selected ? `${selected.native} (${selected.english})` : 'Select language'}
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent
-        avoidCollisions={false}
-        collisionPadding={0}
-        className="min-w-full
-                    max-h-[60vh] 
-                    overflow-auto 
-                    sm:w-[380px] 
-                    sm:max-h-[400px]
-                    p-0
-                    top-full
-                    sm:top-auto"
-        side="bottom"
-        align="start"
-        sideOffset={4}
-      >
-        <Command>
-          <CommandInput placeholder="Search language..." />
-          <CommandEmpty>No language found.</CommandEmpty>
-          <CommandGroup>
-            {languages.map((lang) => (
-              <CommandItem
-                key={lang.code}
-                value={lang.native}
-                onSelect={() => {
-                  onChange(lang.code);
-                  setOpen(false);
-                }}
-              >
-                <Check
-                  className={cn('mr-2 h-4 w-4', value === lang.code ? 'opacity-100' : 'opacity-0')}
-                />
-                {lang.native} <span className="ml-1 text-muted-foreground">({lang.english})</span>
-              </CommandItem>
-            ))}
-          </CommandGroup>
-        </Command>
-      </PopoverContent>
-    </Popover>
+    <AutoComplete
+      selectedValue={value || ''}
+      className={className}
+      items={languages
+        .filter((l) =>
+          [l.code, l.english, l.native, `${l.native} (${l.english})`].some((v) =>
+            v.toLowerCase().includes(searchValue.toLowerCase()),
+          ),
+        )
+        .map((l) => ({ value: l.code, label: `${l.native} (${l.english})` }))}
+      searchValue={searchValue}
+      onSearchValueChange={setSearchValue}
+      onSelectedValueChange={onChange}
+      placeholder={t('language.placeholder')}
+    />
   );
 }

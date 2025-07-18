@@ -27,6 +27,9 @@
         "vacancy_name": "Vacancy name",
         "enter_skills": "Enter skill...",
         "save": "Save",
+        "language": {
+            "placeholder": "Select language (optional)"
+        },
         "about": {
             "title": "About This App",
             "appGeneral": "This app helps you prepare for job interviews in a structured and interactive way. You can track your progress, score your answers, and practice realistic questions tailored to your role.",

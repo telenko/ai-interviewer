@@ -76,7 +76,7 @@ export default function AddVacancyModal({ open, onClose }: { open: boolean; onCl
 
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
-      <DialogContent className="w-full h-screen overflow-y-auto max-w-none rounded-none sm:max-w-lg sm:h-auto sm:rounded-xl">
+      <DialogContent className="w-full h-screen sm:max-h-screen overflow-y-auto max-w-none rounded-none sm:max-w-lg sm:h-auto sm:rounded-xl">
         <DialogHeader className="flex flex-row items-center justify-between px-1 sm:px-0">
           <Button
             variant="outline"
@@ -154,7 +154,7 @@ export default function AddVacancyModal({ open, onClose }: { open: boolean; onCl
                 <PlusIcon />
               </Button>
             </div>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 max-h-auto sm:max-h-[150px] overflow-y-auto">
               {skills.map((skill) => (
                 <span
                   key={skill}
@@ -173,7 +173,7 @@ export default function AddVacancyModal({ open, onClose }: { open: boolean; onCl
           </div>
 
           {/* Lang_code */}
-          <LanguageSelect value={langCode} onChange={setLangCode} />
+          <LanguageSelect value={langCode} onChange={setLangCode} className="mt-[-8px]" />
         </div>
         <DialogFooter className="mt-4">
           <Button onClick={onClose} variant="outline">

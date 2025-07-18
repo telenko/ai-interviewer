@@ -5,7 +5,5 @@
     -- mobile bottom bug, 
     -- loaders auth fix from text
     -- notes/imps in phone
-    -- aws pages login styling i18n
     -- axe devtools
-    -- langselect consider using more read cmp
     -- validation skill length/skills/title length
