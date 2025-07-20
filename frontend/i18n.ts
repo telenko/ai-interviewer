@@ -3,6 +3,7 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import { initReactI18next } from 'react-i18next';
 import en from './translations/en.json';
 import uk from './translations/uk.json';
+import pl from './translations/pl.json';
 
 // the translations
 // (tip move them in a JSON file and import them,
@@ -10,6 +11,7 @@ import uk from './translations/uk.json';
 const resources = {
   en: en,
   uk: uk,
+  pl: pl,
 };
 
 i18n

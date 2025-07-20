@@ -28,6 +28,7 @@ import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { Progress } from '@/components/ui/progress';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 export default function VacancyCard({ vacancy }: { vacancy: Vacancy }) {
   const [removeVacancy, { isLoading: vacancyRemoving }] = useRemoveVacancyMutation();
@@ -46,7 +47,22 @@ export default function VacancyCard({ vacancy }: { vacancy: Vacancy }) {
             <CardTitle className="text-base truncate leading-tight mb-2">{vacancy.title}</CardTitle>
 
             <CardDescription className="text-sm text-muted-foreground truncate leading-snug max-h-[2.5rem]">
-              {vacancy.skills.slice(0, 5).join(', ')}
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <p>{vacancy.skills.slice(0, 5).join(', ')}</p>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="max-h-[500px] overflow-y-auto">
+                      <ul>
+                        {vacancy.skills.map((skill) => (
+                          <li key={skill}>{skill}</li>
+                        ))}
+                      </ul>
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </CardDescription>
 
             <div className="mt-1 h-[1.5rem]">

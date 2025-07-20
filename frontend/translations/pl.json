@@ -1,0 +1,70 @@
+{
+    "translation": {
+        "app": "AI Interviewer",
+        "progress_colon": "Postęp:",
+        "total_score_colon": "Łączny wynik:",
+        "score_colon": "Wynik:",
+        "score_for_question_colon": "Ocena za to pytanie:",
+        "pls_wait_a_sec": "Poczekaj chwilkę...",
+        "enter_answer": "Wpisz swoją odpowiedź...",
+        "explanation_AI": "Wskazówka od AI",
+        "copy": "Kopiuj",
+        "explain": "Wyjaśnij",
+        "answer": "Odpowiedz",
+        "answer_too_long_error": "Odpowiedź musi być krótsza niż {{amount}} znaków",
+        "back": "Wstecz",
+        "forward": "Dalej",
+        "removeVacancyWarn": "Czy na pewno chcesz usunąć ofertę pracy?",
+        "cancel": "Anuluj",
+        "remove": "Usuń",
+        "continue": "Kontynuuj",
+        "question": "Pytanie",
+        "new_vacancy": "Nowa oferta",
+        "add_vacancy": "Dodaj ofertę",
+        "lang_code": "Język rozmowy kwalifikacyjnej (kod, np. ua, pl, en)",
+        "gentle_url_placeh": "Wklej URL oferty :) To będzie szybsze!!",
+        "generate": "Generuj",
+        "vacancy_name": "Nazwa oferty",
+        "enter_skills": "Wpisz umiejętność...",
+        "save": "Zapisz",
+        "language": {
+            "placeholder": "Wybierz język (opcjonalnie)"
+        },
+        "createVacancy": {
+            "errors": {
+                "title": "Nazwa oferty musi mieć od {{min}} do {{max}} znaków.",
+                "skill": "Każda umiejętność musi mieć od {{min}} do {{max}} znaków.",
+                "skillsMax": "Można dodać maksymalnie {{max}} umiejętności.",
+                "skillsMin": "Dodaj co najmniej {{min}} umiejętność.",
+                "url": "Podaj poprawny link (rozpoczynający się od http:// lub https://)."
+            }
+        },
+        "about": {
+            "title": "O aplikacji",
+            "appGeneral": "Ta aplikacja pomaga przygotowywać się do rozmów kwalifikacyjnych w uporządkowany i interaktywny sposób. Możesz śledzić swój postęp, oceniać odpowiedzi i ćwiczyć realistyczne pytania dopasowane do Twojej roli.",
+            "appSecondary": "Stworzona z wykorzystaniem nowoczesnych technologii webowych, takich jak React, Tailwind CSS, TanStack Router i shadcn/ui. Aplikacja zaprojektowana z naciskiem na szybkość, prostotę i wygodę użytkownika.",
+            "authorTitle": "O autorze",
+            "authorGeneral": "Cześć! Nazywam się Andrij Telenko — jestem inżynierem oprogramowania z pasją do tworzenia czystych, dostępnych i wspieranych AI narzędzi, które pomagają ludziom się rozwijać. Lubię React, technologie serverless oraz projektowanie UI/UX.",
+            "authorSecondary": "W wolnym czasie tworzę projekty poboczne, badam trendy technologiczne i spędzam czas z moją córką.",
+            "helpUkraine": "Pomóż Ukrainie"
+        },
+        "welcome": {
+            "title": "Rozpocznij nową drogę z AI-rozmową kwalifikacyjną",
+            "subTitle": "Ćwicz, rozwijaj się, otrzymuj feedback i przygotuj się do pracy marzeń.",
+            "login": "Zarejestruj się / Zaloguj się"
+        },
+        "navigation": {
+            "home": "Strona główna",
+            "interview": "Rozmowa",
+            "logout": "Wyloguj się",
+            "about": "O stronie",
+            "user": "Użytkownik"
+        },
+        "auth": {
+            "genLoading": "Proszę czekać..."
+        },
+        "error": {
+            "genTitle": "Wystąpił błąd :("
+        }
+    }
+}
