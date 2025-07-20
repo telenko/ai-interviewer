@@ -67,7 +67,7 @@ export default function QuestionPanel({
           <div className="text-sm text-gray-500 w-auto text-right shrink-0">
             {!questionLoading && question ? (
               <div>
-                {t('question')} {currentQuestionIndex || 0 + 1}/{totalQuestions}
+                {t('question')} {(currentQuestionIndex ?? 0) + 1}/{totalQuestions}
               </div>
             ) : (
               <Skeleton className="h-[20px] w-[60px]" />
