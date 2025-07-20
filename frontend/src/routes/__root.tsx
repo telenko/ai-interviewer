@@ -1,15 +1,23 @@
+import ErrorCard from '@/components/custom/ErrorCard';
+import Loader from '@/components/custom/Loader';
 import Secured from '@/modules/Auth';
 import { Header } from '@/modules/Layout/Header';
 import { WelcomePage } from '@/modules/Layout/WelcomePage';
 import { Outlet, createRootRoute } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from 'react-oidc-context';
 
 const BaseLayout = () => {
   const auth = useAuth();
+  const { t } = useTranslation();
   if (auth.isLoading) {
-    return null; // TODO LOADER
+    return <Loader text={t('auth.genLoading')} />;
   }
+  if (auth.error) {
+    return <ErrorCard msg={auth.error.message} />;
+  }
+
   if (!auth.isAuthenticated) {
     return <WelcomePage />;
   }

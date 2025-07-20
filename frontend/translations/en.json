@@ -59,6 +59,12 @@
             "logout": "Logout",
             "about": "About",
             "user": "User"
+        },
+        "auth": {
+            "genLoading": "Please wait..."
+        },
+        "error": {
+            "genTitle": "Encountering error :("
         }
     }
 }

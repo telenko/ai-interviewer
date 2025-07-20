@@ -3,6 +3,5 @@
 - UI bugs/next: 
     -- icon brand, 
     -- mobile bottom bug, 
-    -- loaders auth fix from text
     -- notes/imps in phone
     -- axe devtools

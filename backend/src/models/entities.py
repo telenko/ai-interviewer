@@ -1,4 +1,5 @@
 from enum import Enum
+from datetime import datetime
 from typing import Annotated, Optional, List
 import uuid
 from pydantic import (
@@ -71,6 +72,7 @@ class Vacancy(BaseDynamoModel):
     lang_code: Annotated[
         Optional[str], StringConstraints(max_length=LANG_CODE_LIMIT)
     ] = None
+    created_at: Optional[str] = None
 
 
 def build_vacancy(
@@ -91,6 +93,7 @@ def build_vacancy(
         type=EntityType.VACANCY.value,
         score=0.0,
         lang_code=lang_code,
+        created_at=datetime.now().isoformat(),
     )
 
 

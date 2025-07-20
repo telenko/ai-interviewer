@@ -24,20 +24,5 @@ export default function Secured(props: React.PropsWithChildren) {
     authContainer = auth;
   }, [auth]);
 
-  switch (auth.activeNavigator) {
-    case 'signinSilent':
-      return <div>Signing you in...</div>;
-    case 'signoutRedirect':
-      return <div>Signing you out...</div>;
-  }
-
-  if (auth.isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (auth.error) {
-    return <div>Encountering error... {auth.error.message}</div>;
-  }
-
   return <>{auth.isAuthenticated ? props.children : null}</>;
 }

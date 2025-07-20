@@ -3,7 +3,7 @@ import VacancyCard, { VacancyCardSkeleton } from './VacancyCard';
 import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import AddVacancyModal from './AddVacancyModal';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card } from '@/components/ui/card';
 
@@ -25,6 +25,15 @@ const AddVacancyBtn = (props: React.ComponentProps<'button'>) => {
 
 export default function VacanciesGrid() {
   const { data: vacancies, isLoading } = useGetVacanciesQuery();
+  const sortedVacancies = useMemo(
+    () =>
+      [...(vacancies ?? [])].sort((a, b) => {
+        const dateA = a.created_at ? new Date(a.created_at).getTime() : 0; // null = 0 (найстаріше)
+        const dateB = b.created_at ? new Date(b.created_at).getTime() : 0;
+        return dateA - dateB; // новіші вище
+      }),
+    [vacancies],
+  );
   const [addModalOpen, setAddModalOpen] = useState(false);
   return (
     <div className="">
@@ -33,8 +42,8 @@ export default function VacanciesGrid() {
       <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-4">
         <AddVacancyBtn onClick={() => setAddModalOpen(true)} />
         {isLoading ? [1, 2, 3].map((n) => <VacancyCardSkeleton key={n} />) : null}
-        {!isLoading && vacancies
-          ? vacancies.map((vacancy) => <VacancyCard key={vacancy.SK} vacancy={vacancy} />)
+        {!isLoading && sortedVacancies.length > 0
+          ? sortedVacancies.map((vacancy) => <VacancyCard key={vacancy.SK} vacancy={vacancy} />)
           : null}
       </div>
     </div>
