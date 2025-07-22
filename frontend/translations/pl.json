@@ -1,6 +1,6 @@
 {
     "translation": {
-        "app": "AI Interviewer",
+        "app": "ApplyMatch",
         "progress_colon": "Postęp:",
         "total_score_colon": "Łączny wynik:",
         "score_colon": "Wynik:",
@@ -50,7 +50,7 @@
         },
         "welcome": {
             "title": "Rozpocznij nową drogę z AI-rozmową kwalifikacyjną",
-            "subTitle": "Ćwicz, rozwijaj się, otrzymuj feedback i przygotuj się do pracy marzeń.",
+            "subTitle": "Trenuj z inteligentnym AI-rekruterem, otrzymuj szczegółowy feedback i przygotuj się do pracy marzeń.",
             "login": "Zarejestruj się / Zaloguj się"
         },
         "navigation": {

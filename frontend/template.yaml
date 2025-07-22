@@ -1,6 +1,20 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Resources:
 
+Parameters:
+  DomainName:
+    Type: String
+    Description: 'Домен для GUI (наприклад, interviewer.mydomain.com)'
+    Default: applymatch.me
+  HostedZoneId:
+    Type: String
+    Description: 'ID Hosted Zone у Route53 для цього домену'
+    Default: Z0821886DZ7I8JZL404W
+  CertificateArn:
+    Type: String
+    Description: 'ARN виданого ACM сертифіката у us-east-1'
+    Default: 'arn:aws:acm:us-east-1:533266963136:certificate/ad908d99-c95a-4f84-947f-d0edfe752077'
+
+Resources:
   MySiteBucket:
     Type: AWS::S3::Bucket
     Properties:
@@ -20,25 +34,27 @@ Resources:
     Properties:
       Bucket: !Ref MySiteBucket
       PolicyDocument:
-        Version: "2012-10-17"
+        Version: '2012-10-17'
         Statement:
           - Sid: GrantCloudFrontAccess
             Effect: Allow
             Principal:
               CanonicalUser: !GetAtt MyCloudFrontOAI.S3CanonicalUserId
             Action: s3:GetObject
-            Resource: !Sub "${MySiteBucket.Arn}/*"
+            Resource: !Sub '${MySiteBucket.Arn}/*'
 
   MyCloudFrontDistribution:
     Type: AWS::CloudFront::Distribution
     Properties:
       DistributionConfig:
         Enabled: true
+        Aliases:
+          - !Ref DomainName
         Origins:
           - DomainName: !GetAtt MySiteBucket.RegionalDomainName
             Id: S3Origin
             S3OriginConfig:
-              OriginAccessIdentity: !Sub "origin-access-identity/cloudfront/${MyCloudFrontOAI}"
+              OriginAccessIdentity: !Sub 'origin-access-identity/cloudfront/${MyCloudFrontOAI}'
         DefaultCacheBehavior:
           TargetOriginId: S3Origin
           ViewerProtocolPolicy: redirect-to-https
@@ -54,8 +70,22 @@ Resources:
             ResponseCode: 200
             ResponsePagePath: /index.html
         ViewerCertificate:
-          CloudFrontDefaultCertificate: true
+          AcmCertificateArn: !Ref CertificateArn
+          SslSupportMethod: sni-only
+          MinimumProtocolVersion: TLSv1.2_2021
+
+  MyDNSRecord:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: !Ref HostedZoneId
+      Name: !Ref DomainName
+      Type: A
+      AliasTarget:
+        DNSName: !GetAtt MyCloudFrontDistribution.DomainName
+        HostedZoneId: Z2FDTNDATAQYW2
 
 Outputs:
   CloudFrontURL:
-    Value: !Sub "https://${MyCloudFrontDistribution.DomainName}"
+    Value: !Sub 'https://${MyCloudFrontDistribution.DomainName}'
+  WebsiteURL:
+    Value: !Sub 'https://${DomainName}'

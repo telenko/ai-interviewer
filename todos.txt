@@ -1,7 +1,6 @@
 
 - Monitoring integration - Engagement, Retention, CTR
-- UI bugs/next: 
-    -- icon brand, 
+- UI bugs/next:
     -- mobile bottom bug, 
     -- notes/imps in phone
     -- axe devtools

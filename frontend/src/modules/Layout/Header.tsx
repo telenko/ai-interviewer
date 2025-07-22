@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import logoUrl from '/logo.svg?url';
 import { Sheet, SheetTrigger, SheetContent } from '@/components/ui/sheet';
 import { Menu, LogIn, LogOut } from 'lucide-react';
 import { useAuth } from 'react-oidc-context';
@@ -62,8 +63,10 @@ export function Header() {
 
       {/* Logo or title */}
       <div className="text-lg font-semibold flex flex-row space-x-2 items-center">
+        <img src={logoUrl} alt="Logo" className="h-8 w-8" />
+        {/* <Logo /> */}
         <p>{t('app')}</p>
-        <Breadcrumbs className="ml-5 hidden sm:block" />
+        <Breadcrumbs className="mt-[2px] ml-5 hidden sm:block" />
       </div>
 
       {/* User section */}

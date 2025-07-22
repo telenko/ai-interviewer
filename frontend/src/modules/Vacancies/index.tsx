@@ -23,6 +23,22 @@ const AddVacancyBtn = (props: React.ComponentProps<'button'>) => {
   );
 };
 
+const AddVacancyScreenBtn = (props: React.ComponentProps<'button'>) => {
+  const { t } = useTranslation();
+  return (
+    <div className="flex items-center justify-center h-[70vh] w-full">
+      <Button
+        {...props}
+        variant="outline"
+        className="flex flex-col items-center justify-center gap-2 w-72 sm:w-132 h-72 cursor-pointer text-lg border-dashed border-2 rounded-xl hover:border-primary hover:text-primary transition-colors"
+      >
+        <Plus className="w-55 h-55 stroke-[1.9] scale-190 sm:scale-285 mb-2" />
+        <span className="text-base font-medium">{t('add_vacancy')}</span>
+      </Button>
+    </div>
+  );
+};
+
 export default function VacanciesGrid() {
   const { data: vacancies, isLoading } = useGetVacanciesQuery();
   const sortedVacancies = useMemo(
@@ -38,14 +54,18 @@ export default function VacanciesGrid() {
   return (
     <div className="">
       <AddVacancyModal open={addModalOpen} onClose={() => setAddModalOpen(false)} />
-      {/* w-full max-w-sm */}
-      <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-4">
-        <AddVacancyBtn onClick={() => setAddModalOpen(true)} />
-        {isLoading ? [1, 2, 3].map((n) => <VacancyCardSkeleton key={n} />) : null}
-        {!isLoading && sortedVacancies.length > 0
-          ? sortedVacancies.map((vacancy) => <VacancyCard key={vacancy.SK} vacancy={vacancy} />)
-          : null}
-      </div>
+      {!isLoading && vacancies?.length === 0 ? (
+        <AddVacancyScreenBtn onClick={() => setAddModalOpen(true)} />
+      ) : (
+        /* w-full max-w-sm */
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-4">
+          <AddVacancyBtn onClick={() => setAddModalOpen(true)} />
+          {isLoading ? [1, 2, 3].map((n) => <VacancyCardSkeleton key={n} />) : null}
+          {!isLoading && sortedVacancies.length > 0
+            ? sortedVacancies.map((vacancy) => <VacancyCard key={vacancy.SK} vacancy={vacancy} />)
+            : null}
+        </div>
+      )}
     </div>
   );
 }

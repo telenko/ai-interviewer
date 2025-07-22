@@ -1,6 +1,6 @@
 {
     "translation": {
-        "app": "AI Interviewer",
+        "app": "ApplyMatch",
         "progress_colon": "Progress:",
         "total_score_colon": "Total score:",
         "score_colon": "Score:",
@@ -49,8 +49,8 @@
             "helpUkraine": "Help Ukraine"
         },
         "welcome": {
-            "title": "Start Your New Journey with AI Interviews",
-            "subTitle": "Practice, grow, get feedback, and prepare for your dream job.",
+            "title": "Start Your New Journey with ApplyMatch",
+            "subTitle": "Train with a smart AI interviewer, get detailed feedback, and prepare for your dream job.",
             "login": "Sign Up / Sign In"
         },
         "navigation": {
