@@ -16,7 +16,8 @@ import { useTranslation } from 'react-i18next';
 import { CodeEditor } from '@/components/custom/CodeEditor';
 import { MAX_ANSWER_LEN } from '@/config/limits';
 import LazyMarkdownPreview from '@/components/custom/LazyMarkdownPreview';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { Popover, PopoverContent } from '@/components/ui/popover';
+import { PopoverTrigger } from '@radix-ui/react-popover';
 
 export default function QuestionPanel({
   vacancy,
@@ -115,18 +116,18 @@ export default function QuestionPanel({
             </span>
 
             {question.correctness_comment && (
-              <Tooltip>
-                <TooltipTrigger asChild>
+              <Popover>
+                <PopoverTrigger asChild>
                   <InfoIcon
                     className="w-4 h-4 text-indigo-500 cursor-pointer"
                     aria-label="Correctness comment"
                     tabIndex={0}
                   />
-                </TooltipTrigger>
-                <TooltipContent className="max-w-xs whitespace-normal text-sm">
+                </PopoverTrigger>
+                <PopoverContent className="max-w-xs whitespace-normal text-sm">
                   {question.correctness_comment}
-                </TooltipContent>
-              </Tooltip>
+                </PopoverContent>
+              </Popover>
             )}
           </div>
         )}

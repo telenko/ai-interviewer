@@ -4,3 +4,4 @@
     -- mobile bottom bug, 
     -- notes/imps in phone
     -- axe devtools
+    -- show tooltip on click for smartphone
