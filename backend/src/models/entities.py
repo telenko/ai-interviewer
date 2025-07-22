@@ -124,6 +124,7 @@ class Question(BaseDynamoModel):
     )
     explanation: Optional[str] = None
     correctness_score: float = 0.0
+    correctness_comment: Optional[str] = None
     order: Optional[int] = 0
     type: str
     question_type: Optional[QuestionType] = QuestionType.TEXT

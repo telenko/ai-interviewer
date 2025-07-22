@@ -1,7 +1,14 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
-import { ArrowUp, ChevronLeft, ChevronRight, LightbulbIcon, Loader2Icon } from 'lucide-react';
+import {
+  ArrowUp,
+  ChevronLeft,
+  ChevronRight,
+  LightbulbIcon,
+  Loader2Icon,
+  InfoIcon,
+} from 'lucide-react';
 import type { Question, Vacancy } from '@/models/entities';
 import { useEffect, useState } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -9,6 +16,7 @@ import { useTranslation } from 'react-i18next';
 import { CodeEditor } from '@/components/custom/CodeEditor';
 import { MAX_ANSWER_LEN } from '@/config/limits';
 import LazyMarkdownPreview from '@/components/custom/LazyMarkdownPreview';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 export default function QuestionPanel({
   vacancy,
@@ -98,9 +106,28 @@ export default function QuestionPanel({
         {!question || questionLoading ? (
           <Skeleton className="h-[20px] w-[163px]" />
         ) : (
-          <div className="text-sm text-indigo-700 font-semibold">
-            {t('score_for_question_colon')}{' '}
-            {question.correctness_score ? (question.correctness_score * 100).toFixed(1) : '—'}
+          <div className="flex items-center space-x-1 text-sm text-indigo-700 font-semibold">
+            <span>{t('score_for_question_colon')} </span>
+            <span>
+              {question.correctness_score !== undefined && question.correctness_score !== null
+                ? (question.correctness_score * 100).toFixed(1)
+                : '—'}
+            </span>
+
+            {question.correctness_comment && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <InfoIcon
+                    className="w-4 h-4 text-indigo-500 cursor-pointer"
+                    aria-label="Correctness comment"
+                    tabIndex={0}
+                  />
+                </TooltipTrigger>
+                <TooltipContent className="max-w-xs whitespace-normal text-sm">
+                  {question.correctness_comment}
+                </TooltipContent>
+              </Tooltip>
+            )}
           </div>
         )}
       </div>

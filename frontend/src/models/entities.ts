@@ -19,6 +19,7 @@ export type Question = {
   answer?: string;
   order: number;
   correctness_score?: number;
+  correctness_comment?: string;
   explanation?: string;
   question_type: 'text' | 'coding';
   prog_lang_code?: ProgLangEnum;

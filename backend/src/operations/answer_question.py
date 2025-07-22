@@ -48,6 +48,7 @@ def answer_question(table, user_id, payload: AnswerQuestionPayload):
     updates = {
         "answer": payload.answer,
         "correctness_score": validity.correctness_rate,
+        "correctness_comment": validity.correctness_comment,
     }
     update_entity(
         table,
