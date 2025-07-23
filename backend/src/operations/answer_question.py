@@ -38,9 +38,7 @@ def answer_question(table, user_id, payload: AnswerQuestionPayload):
     if not vacancy or not question:
         raise Exception("Wrong data provided, failed to retrieve vacancy and question")
     validity = check_answer.check_answer(
-        question.question,
-        payload.answer,
-        vacancy.title,
+        question.question, payload.answer, vacancy.title, vacancy.lang_code
     )
     if not validity:
         raise Exception("Failed to analyze answer within AI")

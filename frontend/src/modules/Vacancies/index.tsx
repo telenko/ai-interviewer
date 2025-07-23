@@ -6,6 +6,7 @@ import AddVacancyModal from './AddVacancyModal';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card } from '@/components/ui/card';
+import { MAX_VACANCIES } from '@/config/limits';
 
 const AddVacancyBtn = (props: React.ComponentProps<'button'>) => {
   const { t } = useTranslation();
@@ -59,7 +60,10 @@ export default function VacanciesGrid() {
       ) : (
         /* w-full max-w-sm */
         <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-4">
-          <AddVacancyBtn onClick={() => setAddModalOpen(true)} />
+          {(vacancies?.length ?? 0) <= MAX_VACANCIES ? (
+            <AddVacancyBtn onClick={() => setAddModalOpen(true)} />
+          ) : null}
+
           {isLoading ? [1, 2, 3].map((n) => <VacancyCardSkeleton key={n} />) : null}
           {!isLoading && sortedVacancies.length > 0
             ? sortedVacancies.map((vacancy) => <VacancyCard key={vacancy.SK} vacancy={vacancy} />)
