@@ -45,7 +45,7 @@ def answer_question(table, user_id, payload: AnswerQuestionPayload):
 
     updates = {
         "answer": payload.answer,
-        "correctness_score": validity.correctness_rate,
+        "correctness_score": validity.correctness_rate / 100,
         "correctness_comment": validity.correctness_comment,
     }
     update_entity(
@@ -55,4 +55,4 @@ def answer_question(table, user_id, payload: AnswerQuestionPayload):
         update_attrs=updates,
     )
     update_vacancy_metrics(table, user_id, vacancy.PK, vacancy.SK)
-    return {"score": validity.correctness_rate}
+    return {"score": validity.correctness_rate / 100}

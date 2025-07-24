@@ -10,7 +10,7 @@ from src.config.limits import QUESTION_COMMENT_MAX_LEN
 class CorrectnessLLM(BaseModel):
     model_config = ConfigDict(extra="forbid")
     is_valid: bool
-    correctness_rate: Annotated[float, Field(strict=True, gt=0, le=1)]
+    correctness_rate: Annotated[int, Field(strict=True, gt=0, le=100)]
     correctness_comment: Annotated[
         str, StringConstraints(max_length=QUESTION_COMMENT_MAX_LEN)
     ]
@@ -23,18 +23,22 @@ def check_answer(
     response = client.chat.completions.parse(
         model="gpt-4o-mini",
         response_format=CorrectnessLLM,
+        max_tokens=QUESTION_COMMENT_MAX_LEN + 100,
         messages=[
             {
                 "role": "system",
                 "content": (
                     "You are an expert evaluator for job interviews.\n"
-                    "Your task is to assess whether the answer is valid,relevant and complete in context of the role.\n"
-                    "Evaluate how well the answer:\n"
-                    "- directly addresses the question,\n"
-                    "- shows understanding of the role's responsibilities,\n"
-                    "- provides a complete and thoughtful response.\n\n"
-                    "- add comment of your 'correctness_rate' to 'correctness_comment' field.Clearly justify the reasoning of correctness rate, including key factors or evidence that influenced evaluation."
-                    f"- Use maximum {QUESTION_COMMENT_MAX_LEN} characters for 'correctness_comment'."
+                    "Score answer 0-100 by rules:\n"
+                    "90-100 = full, clear, relevant with examples or detailed logic, fully covers question;\n"
+                    "70-89 = mostly correct and functional, minor gaps;\n"
+                    "40-69 = incomplete, partial or vague;\n"
+                    "0-39 = incorrect, invalid, irrelevant.\n\n"
+                    "Consider that answer MUST:\n"
+                    "- show understanding of the role's responsibilities.\n\n"
+                    "Notes:\n"
+                    f"- Add a brief 'correctness_comment' explaining your score."
+                    f"- Return max {QUESTION_COMMENT_MAX_LEN} characters for 'correctness_comment'"
                     f"\n- Answer in language {lang}"
                     if lang
                     else ""
