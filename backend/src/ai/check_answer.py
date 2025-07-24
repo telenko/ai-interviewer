@@ -22,33 +22,27 @@ def check_answer(
     client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
     response = client.chat.completions.parse(
         model="gpt-4o-mini",
+        temperature=0,
         response_format=CorrectnessLLM,
         max_tokens=QUESTION_COMMENT_MAX_LEN + 100,
         messages=[
             {
                 "role": "system",
                 "content": (
-                    "You are an expert evaluator for job interviews.\n"
-                    "Score answer 0-100 by rules:\n"
-                    "90-100 = full, clear, relevant with examples or detailed logic, fully covers question;\n"
-                    "70-89 = mostly correct and functional, minor gaps;\n"
-                    "40-69 = incomplete, partial or vague;\n"
-                    "0-39 = incorrect, invalid, irrelevant.\n\n"
-                    "Consider that answer MUST:\n"
-                    "- show understanding of the role's responsibilities.\n\n"
-                    "Notes:\n"
-                    f"- Add a brief 'correctness_comment' explaining your score."
-                    f"- Return max {QUESTION_COMMENT_MAX_LEN} characters for 'correctness_comment'"
-                    f"\n- Answer in language {lang}"
-                    if lang
-                    else ""
+                    "Strictly evaluate the answer (0-100):\n"
+                    "- 90-100: complete, clear, relevant, examples/logic;\n"
+                    "- 60-89: mostly correct, minor missing details or minor gaps;\n"
+                    "- 40-59: partly correct, lacks clarity or depth, incomplete reasoning or code;;\n"
+                    "- 25-39: minimal relevance, vague explanation, incorrect or missing main parts;\n"
+                    "- 0-24: incorrect, empty, irrelevant.\n"
+                    "If empty, score=0. If not related to role, score<=20.\n"
+                    f"Correctness comment <= {QUESTION_COMMENT_MAX_LEN} chars"
+                    + (f", respond in {lang}." if lang else ".")
                 ),
             },
             {
                 "role": "user",
-                "content": (
-                    f"Role: {role}\n" f"Question: {question}\n" f"Answer: {answer}"
-                ),
+                "content": (f"Role: {role}\nQuestion: {question}\nAnswer: {answer}"),
             },
         ],
     )
