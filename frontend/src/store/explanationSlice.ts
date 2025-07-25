@@ -57,13 +57,11 @@ export const explanationSlice = createSlice({
       .addCase(fetchExplanation.pending, (state, action) => {
         const { questionSK } = action.meta.arg;
         state.loadingByQuestionSK[questionSK] = true;
-        console.log('TRUE SET');
         state.errorByQuestionSK[questionSK] = null;
       })
       .addCase(fetchExplanation.fulfilled, (state, action) => {
         const { questionSK, explanation } = action.payload;
         state.explanationByQuestionSK[questionSK] = explanation;
-        console.log('FALSE SET');
         state.loadingByQuestionSK[questionSK] = false;
         state.errorByQuestionSK[questionSK] = null;
       })
