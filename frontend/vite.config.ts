@@ -27,6 +27,12 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
       },
+      // Proxy /api requests to backend server
+      '/event': {
+        target: 'https://padtikxvn1.execute-api.eu-central-1.amazonaws.com/pub-stage',
+        changeOrigin: true,
+        secure: false,
+      },
     },
   },
   build: {

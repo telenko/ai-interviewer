@@ -7,6 +7,7 @@ import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card } from '@/components/ui/card';
 import { MAX_VACANCIES } from '@/config/limits';
+import { useActivityMonitoring } from '@/services/Monitoring/useActivityMonitoring';
 
 const AddVacancyBtn = (props: React.ComponentProps<'button'>) => {
   const { t } = useTranslation();
@@ -42,6 +43,7 @@ const AddVacancyScreenBtn = (props: React.ComponentProps<'button'>) => {
 
 export default function VacanciesGrid() {
   const { data: vacancies, isLoading } = useGetVacanciesQuery();
+  const { trackClick } = useActivityMonitoring();
   const sortedVacancies = useMemo(
     () =>
       [...(vacancies ?? [])].sort((a, b) => {
@@ -52,16 +54,20 @@ export default function VacanciesGrid() {
     [vacancies],
   );
   const [addModalOpen, setAddModalOpen] = useState(false);
+  const openNewVacModal = () => {
+    setAddModalOpen(true);
+    trackClick('add_vacancy_btn');
+  };
   return (
     <div className="">
       <AddVacancyModal open={addModalOpen} onClose={() => setAddModalOpen(false)} />
       {!isLoading && vacancies?.length === 0 ? (
-        <AddVacancyScreenBtn onClick={() => setAddModalOpen(true)} />
+        <AddVacancyScreenBtn onClick={openNewVacModal} />
       ) : (
         /* w-full max-w-sm */
         <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-4">
           {(vacancies?.length ?? 0) <= MAX_VACANCIES ? (
-            <AddVacancyBtn onClick={() => setAddModalOpen(true)} />
+            <AddVacancyBtn onClick={openNewVacModal} />
           ) : null}
 
           {isLoading ? [1, 2, 3].map((n) => <VacancyCardSkeleton key={n} />) : null}

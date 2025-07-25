@@ -11,6 +11,7 @@ import { Provider } from 'react-redux';
 import { AuthProvider } from 'react-oidc-context';
 import { store } from './store';
 import '../i18n';
+import MonitoringProvider from './services/Monitoring/MonitoringProvider.tsx';
 
 // Create a new router instance
 const router = createRouter({
@@ -49,9 +50,11 @@ if (rootElement && !rootElement.innerHTML) {
   root.render(
     <StrictMode>
       <AuthProvider {...cognitoAuthConfig}>
-        <Provider store={store}>
-          <RouterProvider router={router} />
-        </Provider>
+        <MonitoringProvider>
+          <Provider store={store}>
+            <RouterProvider router={router} />
+          </Provider>
+        </MonitoringProvider>
       </AuthProvider>
     </StrictMode>,
   );

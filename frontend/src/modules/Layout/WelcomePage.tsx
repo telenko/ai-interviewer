@@ -1,10 +1,12 @@
 import { Button } from '@/components/ui/button';
+import { useActivityMonitoring } from '@/services/Monitoring/useActivityMonitoring';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from 'react-oidc-context';
 
 export const WelcomePage = () => {
   const { t } = useTranslation();
   const auth = useAuth();
+  const { trackClick } = useActivityMonitoring();
 
   return (
     <div className="min-h-screen flex flex-col justify-center items-center text-center px-4 py-10 bg-gradient-to-br from-blue-100 via-indigo-100 to-indigo-200">
@@ -21,7 +23,10 @@ export const WelcomePage = () => {
           <Button
             size="lg"
             className="text-base px-6 py-4 sm:w-auto w-full"
-            onClick={() => auth.signinRedirect()}
+            onClick={() => {
+              trackClick('login_welcome');
+              auth.signinRedirect();
+            }}
           >
             {t('welcome.login')}
           </Button>

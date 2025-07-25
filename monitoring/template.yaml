@@ -1,0 +1,100 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: Monitoring Subproject for Engagement & Retention Metrics
+
+Globals:
+  Function:
+    Timeout: 30
+    Runtime: python3.11
+    MemorySize: 128
+
+Parameters:
+  AllowOrigin:
+    Type: String
+    NoEcho: true
+
+Resources:
+  MonitoringHttpApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      Name: Monitoring API
+      CorsConfiguration:
+        AllowMethods:
+          - GET
+          - POST
+          - OPTIONS
+        AllowHeaders:
+          - Content-Type
+        AllowOrigins:
+          - !Ref AllowOrigin
+
+  MonitoringHttpApiStage:
+    Type: AWS::ApiGatewayV2::Stage
+    Properties:
+      ApiId: !Ref MonitoringHttpApi
+      StageName: pub-stage
+      AutoDeploy: true
+      DefaultRouteSettings:
+        ThrottlingBurstLimit: 200
+        ThrottlingRateLimit: 100
+
+  UsersSessionsTable:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: Retain
+    Properties:
+      TableName: UsersSessionsTable
+      AttributeDefinitions:
+        - AttributeName: USER_ID
+          AttributeType: S
+      KeySchema:
+        - AttributeName: USER_ID
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+
+  EventCollectorFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: EventCollectorFunction
+      Handler: event_collector.lambda_handler
+      CodeUri: src/
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref UsersSessionsTable
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: UsersSessionsTable
+        - Statement:
+            Effect: Allow
+            Action:
+              - cloudwatch:PutMetricData
+            Resource: "*"
+      Events:
+        MonitoringHttpApi:
+          Type: HttpApi
+          Properties:
+            Path: /event
+            Method: POST
+            ApiId: !Ref MonitoringHttpApi
+
+  DailyAnalyticsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: DailyAnalyticsFunction
+      CodeUri: src/
+      Handler: daily_analytics.lambda_handler
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref UsersSessionsTable
+        - Statement:
+            Effect: Allow
+            Action:
+              - cloudwatch:PutMetricData
+            Resource: "*"
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref UsersSessionsTable
+      Events:
+        DailySchedule:
+          Type: Schedule
+          Properties:
+            Schedule: cron(0 1 * * ? *) # Щодня о 01:00 UTC

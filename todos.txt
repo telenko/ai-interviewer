@@ -1,7 +1,10 @@
 
-- Monitoring integration - Engagement, Retention, CTR
+- [TESTING] Monitoring integration - Engagement, Retention, CTR
 - UI bugs/next:
     -- mobile bottom bug, 
     -- notes/imps in phone
     -- axe devtools
-    -- show tooltip on click for smartphone
+    -- validation errors layout mismatch
+    -- monitoring completion with sessionId
+    -- monitoring sessionId idle state management
+    -- adaptive icons

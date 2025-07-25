@@ -11,6 +11,7 @@ import { useAuth } from 'react-oidc-context';
 const BaseLayout = () => {
   const auth = useAuth();
   const { t } = useTranslation();
+
   if (auth.isLoading) {
     return <Loader text={t('auth.genLoading')} />;
   }
