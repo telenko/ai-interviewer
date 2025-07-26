@@ -75,7 +75,7 @@ export default function QuestionPanel({
               <Skeleton className="h-[28px] w-[163px]" />
             )}
             {!vacancyLoading && vacancy?.company ? (
-              <div className="text-sm text-gray-500 flex items-center gap-1 absolute bottom-[-18px]">
+              <div className="text-sm text-gray-500 flex items-center gap-1 absolute bottom-[-20px]">
                 <Popover>
                   <PopoverTrigger asChild>
                     <span className="flex items-center gap-1 cursor-pointer">
@@ -90,7 +90,7 @@ export default function QuestionPanel({
               </div>
             ) : (
               vacancyLoading && (
-                <Skeleton className="mt-[5px] h-[16px] w-[100px] absolute bottom-[-18px]" />
+                <Skeleton className="mt-[5px] h-[16px] w-[100px] absolute bottom-[-20px]" />
               )
             )}
           </div>
