@@ -36,6 +36,7 @@ def create_vacancy(table, user_id, payload: CreateVacancyPayload):
         skills=payload.skills,
         url=payload.url,
         lang_code=payload.lang_code,
+        company=payload.company,
     )
     add_item(table, vacancy)
 

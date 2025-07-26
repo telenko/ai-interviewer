@@ -65,7 +65,6 @@ export function useSessionMonitoring() {
     if (!sid || now - lastActive > SESSION_TTL) {
       sid = generateSessionId();
       localStorage.setItem(LS_SESSION_KEY, sid);
-      console.log('START');
       sendEvent('session_start', { sessionId: sid });
     }
 

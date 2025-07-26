@@ -17,6 +17,8 @@ type Props<T extends string> = {
   emptyMessage?: string;
   placeholder?: string;
   className?: string;
+  prefix?: React.ReactNode;
+  inputStyles?: any;
 };
 
 export function AutoComplete<T extends string>({
@@ -29,6 +31,8 @@ export function AutoComplete<T extends string>({
   emptyMessage = 'No items.',
   placeholder = 'Search...',
   className,
+  prefix,
+  inputStyles,
 }: Props<T>) {
   const [open, setOpen] = useState(false);
 
@@ -65,6 +69,7 @@ export function AutoComplete<T extends string>({
         <Command shouldFilter={false}>
           <PopoverAnchor asChild>
             <div className="relative w-full">
+              {prefix}
               <CommandPrimitive.Input
                 asChild
                 value={searchValue}
@@ -73,7 +78,7 @@ export function AutoComplete<T extends string>({
                 onMouseDown={() => setOpen((open) => !!searchValue || !open)}
                 onFocus={() => setOpen(true)}
               >
-                <Input placeholder={placeholder} className="pr-8" />
+                <Input placeholder={placeholder} className="pr-8" style={inputStyles} />
               </CommandPrimitive.Input>
 
               {/* Хрестик для очищення */}

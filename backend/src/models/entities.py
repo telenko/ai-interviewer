@@ -73,6 +73,7 @@ class Vacancy(BaseDynamoModel):
         Optional[str], StringConstraints(max_length=LANG_CODE_LIMIT)
     ] = None
     created_at: Optional[str] = None
+    company: Annotated[Optional[str], StringConstraints(max_length=TEXT_MAX_LEN)] = None
 
 
 def build_vacancy(
@@ -81,6 +82,7 @@ def build_vacancy(
     skills: List[str],
     url: Optional[HttpUrl] = None,
     lang_code: Optional[str] = None,
+    company: Optional[str] = None,
 ) -> Vacancy:
     vacancy_id = str(uuid.uuid4())
     return Vacancy(
@@ -94,6 +96,7 @@ def build_vacancy(
         score=0.0,
         lang_code=lang_code,
         created_at=datetime.now().isoformat(),
+        company=company,
     )
 
 

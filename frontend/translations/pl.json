@@ -33,12 +33,19 @@
         "createVacancy": {
             "errors": {
                 "title": "Nazwa oferty musi mieć od {{min}} do {{max}} znaków.",
+                "company": "Nazwa firmy musi mieć od {{min}} do {{max}} znaków.",
                 "skill": "Każda umiejętność musi mieć od {{min}} do {{max}} znaków.",
                 "skillsMax": "Można dodać maksymalnie {{max}} umiejętności.",
                 "skillsMin": "Dodaj co najmniej {{min}} umiejętność.",
                 "url": "Podaj poprawny link (rozpoczynający się od http:// lub https://)."
+            },
+            "company_name": "Nazwa firmy (opcjonalnie)",
+            "generate_hint": {
+                "title": "Możemy wypełnić te pola za Ciebie, abyś mógł wygodnie korzystać z usługi 🙂.",
+                "subTitle": "Wklej tutaj link do oferty pracy z przeglądarki, a my zajmiemy się resztą!"
             }
         },
+        "company_name_hint": "Nazwa firmy jest jedynie symboliczna — pomaga stworzyć bardziej realistyczną próbę rozmowy kwalifikacyjnej.",
         "about": {
             "title": "O aplikacji",
             "appGeneral": "Ta aplikacja pomaga przygotowywać się do rozmów kwalifikacyjnych w uporządkowany i interaktywny sposób. Możesz śledzić swój postęp, oceniać odpowiedzi i ćwiczyć realistyczne pytania dopasowane do Twojej roli.",

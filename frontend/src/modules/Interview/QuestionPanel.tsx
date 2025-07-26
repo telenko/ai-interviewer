@@ -8,6 +8,8 @@ import {
   LightbulbIcon,
   Loader2Icon,
   InfoIcon,
+  Building2,
+  Send,
 } from 'lucide-react';
 import type { Question, Vacancy } from '@/models/entities';
 import { useEffect, useState } from 'react';
@@ -66,11 +68,30 @@ export default function QuestionPanel({
       <div className="flex flex-nowrap items-center sm:flex-row sm:items-center sm:justify-between gap-2">
         {/* --- Назва ролі вакансії --- */}
         <div className="flex flex-row items-center sm:justify-between w-full gap-1 text-left">
-          <div className="text-xl font-semibold text-gray-800 w-full">
+          <div className="text-xl font-semibold text-gray-800 w-full relative">
             {!vacancyLoading && vacancy ? (
               vacancy.title
             ) : (
               <Skeleton className="h-[28px] w-[163px]" />
+            )}
+            {!vacancyLoading && vacancy?.company ? (
+              <div className="text-sm text-gray-500 flex items-center gap-1 absolute bottom-[-18px]">
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <span className="flex items-center gap-1 cursor-pointer">
+                      <Building2 className="w-4 h-4 text-gray-400" />
+                      {vacancy.company}
+                    </span>
+                  </PopoverTrigger>
+                  <PopoverContent>
+                    <p className="text-sm text-gray-600">{t('company_name_hint')}</p>
+                  </PopoverContent>
+                </Popover>
+              </div>
+            ) : (
+              vacancyLoading && (
+                <Skeleton className="mt-[5px] h-[16px] w-[100px] absolute bottom-[-18px]" />
+              )
             )}
           </div>
           <div className="text-sm text-gray-500 w-auto text-right shrink-0">
@@ -231,7 +252,11 @@ export default function QuestionPanel({
           onClick={onExplain}
           disabled={explainDisable}
         >
-          {explanationLoading ? <Loader2Icon className="animate-spin" /> : null}
+          {explanationLoading ? (
+            <Loader2Icon className="animate-spin ml-[-15px]" />
+          ) : (
+            <LightbulbIcon className="h-2 w-2 ml-[-15px]" />
+          )}
           {t('explain')}
         </Button>
         <Button
@@ -239,16 +264,30 @@ export default function QuestionPanel({
           onClick={() => onAnswer(answer)}
           disabled={answerDisable}
         >
-          {answerLoading ? <Loader2Icon className="animate-spin" /> : null}
+          {answerLoading ? (
+            <Loader2Icon className="animate-spin ml-[-15px]" />
+          ) : (
+            <Send className="h-2 w-2 ml-[-15px]" />
+          )}
           {t('answer')}
         </Button>
-        <Button className="flex-1" variant="outline" onClick={onPrev} disabled={disablePrev}>
-          <ChevronLeft className="sm:hidden w-4 h-4" />
-          <span className="hidden sm:block">{t('back')}</span>
+        <Button
+          className="flex-1 flex items-center justify-center gap-2"
+          variant="outline"
+          onClick={onPrev}
+          disabled={disablePrev}
+        >
+          <ChevronLeft className="w-4 h-4 flex-1 sm:mt-[2px]" />
+          <span className="hidden sm:block flex-2 text-left">{t('back')}</span>
         </Button>
-        <Button className="flex-1" variant="outline" onClick={onNext} disabled={disableNext}>
-          <ChevronRight className="sm:hidden w-4 h-4" />
-          <span className="hidden sm:block">{t('forward')}</span>
+        <Button
+          className="flex-1 flex items-center justify-center gap-2"
+          variant="outline"
+          onClick={onNext}
+          disabled={disableNext}
+        >
+          <span className="hidden sm:block flex-2 text-right">{t('forward')}</span>
+          <ChevronRight className="w-4 h-4 flex-1 sm:mt-[2px]" />
         </Button>
       </div>
     </div>

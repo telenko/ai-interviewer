@@ -9,6 +9,7 @@ class CreateVacancyPayload(BaseModel):
     skills: List[str]
     url: Optional[HttpUrl] = None
     lang_code: Optional[str] = None
+    company: Optional[str] = None
 
     @field_validator("url", mode="before")
     @classmethod

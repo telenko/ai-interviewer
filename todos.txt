@@ -1,10 +1,7 @@
 
-- [TESTING] Monitoring integration - Engagement, Retention, CTR
+- [TESTING] Monitoring integration - Engagement, Retention, CTR --> welcome btn not reacting monitor, maybe minutes?
 - UI bugs/next:
     -- mobile bottom bug, 
     -- notes/imps in phone
     -- axe devtools
-    -- validation errors layout mismatch
-    -- monitoring completion with sessionId
-    -- monitoring sessionId idle state management
     -- adaptive icons

@@ -11,7 +11,7 @@ import {
 import { Label } from '@/components/ui/label';
 import type { Vacancy } from '@/models/entities';
 import { Link } from '@tanstack/react-router';
-import { Loader2Icon, TrashIcon } from 'lucide-react';
+import { Loader2Icon, TrashIcon, Building2 } from 'lucide-react';
 import './styles.css';
 import {
   AlertDialog,
@@ -29,6 +29,7 @@ import { cn } from '@/lib/utils';
 import { Progress } from '@/components/ui/progress';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 export default function VacancyCard({ vacancy }: { vacancy: Vacancy }) {
   const [removeVacancy, { isLoading: vacancyRemoving }] = useRemoveVacancyMutation();
@@ -139,6 +140,22 @@ export default function VacancyCard({ vacancy }: { vacancy: Vacancy }) {
           >
             {(vacancy.score * 100).toFixed(0)}
           </Badge>
+
+          {vacancy.company ? (
+            <Popover>
+              <PopoverTrigger asChild>
+                <div className="ml-auto flex gap-2 cursor-pointer">
+                  <Building2 className="w-4 h-4 text-muted-foreground" />
+                  <Label>{vacancy.company}</Label>
+                </div>
+              </PopoverTrigger>
+              <PopoverContent>
+                <p className="max-h-[500px] overflow-y-auto text-sm text-gray-600">
+                  {t('company_name_hint')}
+                </p>
+              </PopoverContent>
+            </Popover>
+          ) : null}
         </div>
       </CardContent>
 
@@ -173,6 +190,7 @@ export const VacancyCardSkeleton = () => {
         <div className="flex gap-3 items-center h-[40px] mt-">
           <Skeleton className="h-3 w-1/6" />
           <Skeleton className="h-5 w-8 rounded-full" />
+          <Skeleton className="h-5 w-20 rounded-full ml-auto" />
         </div>
       </CardContent>
 

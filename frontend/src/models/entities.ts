@@ -8,6 +8,7 @@ export type Vacancy = {
   score: number;
   lang_code?: string;
   created_at?: string | null;
+  company?: string | null;
 };
 
 export type ProgLangEnum = 'py' | 'js' | 'ts' | 'java' | 'c#' | 'dotnet' | 'other';

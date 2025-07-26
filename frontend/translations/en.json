@@ -33,12 +33,19 @@
         "createVacancy": {
             "errors": {
                 "title": "The title must be between {{min}} and {{max}} characters long.",
+                "company": "The company must be between {{min}} and {{max}} characters long.",
                 "skill": "Each skill must be between {{min}} and {{max}} characters long.",
                 "skillsMax": "You can add up to {{max}} skills only.",
                 "skillsMin": "Please add at least {{min}} skills.",
                 "url": "Please enter a valid URL (starting with http:// or https://)."
+            },
+            "company_name": "Company name (optional)",
+            "generate_hint": {
+                "title": "We can fill all these fields for you, so you can enjoy using service 🙂.",
+                "subTitle": "Just paste the vacancy link from the browser here and leave us the rest!"
             }
         },
+        "company_name_hint": "The company name is only symbolic — it helps create a more realistic mock interview.",
         "about": {
             "title": "About This App",
             "appGeneral": "This app helps you prepare for job interviews in a structured and interactive way. You can track your progress, score your answers, and practice realistic questions tailored to your role.",

@@ -63,7 +63,10 @@ export function Header() {
 
       {/* Logo or title */}
       <div className="text-lg font-semibold flex flex-row space-x-2 items-center">
-        <img src={logoUrl} alt="Logo" className="h-8 w-8" />
+        <Link to="/">
+          <img src={logoUrl} alt="Logo" className="h-8 w-8" />
+        </Link>
+
         {/* <Logo /> */}
         <p>{t('app')}</p>
         <Breadcrumbs className="mt-[2px] ml-5 hidden sm:block" />

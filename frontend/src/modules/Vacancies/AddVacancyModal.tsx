@@ -8,16 +8,30 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import InterviewerApi from '@/services/InterviewerApi';
 import { useAddVacancyMutation } from '@/services/vacancyApi';
-import { Loader2Icon, PlusIcon, ClipboardPaste, ArrowLeft } from 'lucide-react';
+import {
+  Loader2Icon,
+  PlusIcon,
+  ClipboardPaste,
+  ArrowLeft,
+  Info,
+  Link2,
+  Type,
+  ListChecks,
+  Building2,
+  Briefcase,
+  X,
+  Check,
+} from 'lucide-react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
 const ErrorLayout = (props: { msg: string }) => (
   <p
-    className="mt-1 text-sm text-red-600 break-words sm:absolute bottom-[-18px] left-2 max-w-[300px] sm:max-w-full"
+    className="mt-1 text-sm text-red-600 break-words sm:absolute bottom-[-20px] left-1 max-w-[300px] sm:max-w-full"
     title={props.msg}
   >
     {props.msg}
@@ -27,12 +41,18 @@ const ErrorLayout = (props: { msg: string }) => (
 export default function AddVacancyModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [url, setUrl] = useState('');
   const [title, setTitle] = useState('');
+  const [company, setCompany] = useState('');
   const [skills, setSkills] = useState<string[]>([]);
   const [inputSkill, setInputSkill] = useState('');
   const [loadingFromUrl, setLoadingFromUrl] = useState(false);
   const [langCode, setLangCode] = useState<string>();
   const [addVacancy, { isLoading: vacancyCreationLoading }] = useAddVacancyMutation();
-  const [touched, setTouched] = useState<{ title?: boolean; url?: boolean; skills?: boolean }>({});
+  const [touched, setTouched] = useState<{
+    title?: boolean;
+    url?: boolean;
+    skills?: boolean;
+    company?: boolean;
+  }>({});
   const { t } = useTranslation();
 
   const closeModal = useCallback(() => {
@@ -40,6 +60,7 @@ export default function AddVacancyModal({ open, onClose }: { open: boolean; onCl
     setTitle('');
     setSkills([]);
     setLangCode('');
+    setCompany('');
     setTouched({});
     onClose();
   }, [onClose]);
@@ -64,6 +85,16 @@ export default function AddVacancyModal({ open, onClose }: { open: boolean; onCl
           [z.url(t('createVacancy.errors.url')), z.literal('')],
           t('createVacancy.errors.url'),
         ),
+        company: z.union(
+          [
+            z
+              .string()
+              .min(3, t('createVacancy.errors.company', { min: 3, max: 30 }))
+              .max(30, t('createVacancy.errors.company', { min: 3, max: 30 })),
+            z.string().length(0),
+          ],
+          t('createVacancy.errors.company', { min: 3, max: 30 }),
+        ),
       }),
     [],
   );
@@ -78,8 +109,9 @@ export default function AddVacancyModal({ open, onClose }: { open: boolean; onCl
         title,
         skills: computedSkills,
         url,
+        company,
       }),
-    [url, title, computedSkills],
+    [url, title, computedSkills, company],
   );
   const isValid = !validation.error;
 
@@ -93,6 +125,10 @@ export default function AddVacancyModal({ open, onClose }: { open: boolean; onCl
   );
   const skillsIssue = useMemo(
     () => validation?.error?.issues?.find((iss) => iss.path.includes('skills')),
+    [validation],
+  );
+  const companyIssue = useMemo(
+    () => validation?.error?.issues?.find((iss) => iss.path.includes('company')),
     [validation],
   );
 
@@ -128,6 +164,7 @@ export default function AddVacancyModal({ open, onClose }: { open: boolean; onCl
       const vacancyCut = response.data.vacancy_cut;
       setTitle(vacancyCut.title);
       setSkills(vacancyCut.skills);
+      setCompany(vacancyCut.company || '');
       setTouched((prev) => ({
         ...prev,
         title: true,
@@ -162,17 +199,19 @@ export default function AddVacancyModal({ open, onClose }: { open: boolean; onCl
           >
             <ArrowLeft className="w-5 h-5" />
           </Button>
-          <DialogTitle className="text-3xl sm:text-2xl font-semibold flex-1 text-center sm:text-left w-full">
+          <DialogTitle className="text-3xl sm:text-2xl font-semibold flex-1 text-center sm:text-left w-full flex items-center gap-3">
+            <Briefcase className="w-6 h-6 text-gray-600" />
             {t('new_vacancy')}
           </DialogTitle>
         </DialogHeader>
 
-        <div className="flex flex-col space-y-6 pb-4 pt-2 mt-0">
+        <div className="flex flex-col space-y-7 pb-4 pt-2 mt-0">
           {/* URL + кнопка */}
           <div className="relative">
-            <div className="flex gap-2 relative">
+            <div className="flex gap-2 relative items-center">
+              <Link2 className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
               <Input
-                className="py-6 blink-green-border placeholder:text-base pr-15 sm:pr-4"
+                className="text-lg pl-10 py-8 blink-green-border placeholder:text-base pr-15 sm:pr-4"
                 placeholder={t('gentle_url_placeh')}
                 value={url}
                 onBlur={() => {
@@ -194,7 +233,7 @@ export default function AddVacancyModal({ open, onClose }: { open: boolean; onCl
                         setUrl(clipboardText);
                       } catch {}
                     }}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 transition text-white px-4 py-2 rounded-md md:hidden"
+                    className="absolute right-13 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 transition text-white px-4 py-2 rounded-md md:hidden"
                     aria-label="Вставити з буфера"
                     type="button"
                   >
@@ -202,12 +241,12 @@ export default function AddVacancyModal({ open, onClose }: { open: boolean; onCl
                   </Button>
                 </>
               ) : null}
-              {url && (
+              {url ? (
                 <Button
                   variant="secondary"
                   onClick={onAutofill}
-                  className="h-12 text-base"
-                  disabled={loadingFromUrl}
+                  className="h-16 text-base cursor-pointer"
+                  disabled={loadingFromUrl || !!urlIssue?.message}
                 >
                   {loadingFromUrl ? (
                     <Loader2Icon className="w-4 h-4 animate-spin" />
@@ -215,6 +254,25 @@ export default function AddVacancyModal({ open, onClose }: { open: boolean; onCl
                     t('generate')
                   )}
                 </Button>
+              ) : (
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <button
+                      type="button"
+                      className="cursor-pointer p-1.5 rounded-sm bg-gray-50 hover:bg-gray-100 text-gray-600 hover:text-gray-800 shadow-sm transition-colors duration-200"
+                    >
+                      <Info className="w-5 h-5" />
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent>
+                    <p className="font-semibold text-gray-800">
+                      {t('createVacancy.generate_hint.title')}
+                    </p>
+                    <p className="text-sm text-gray-600 mt-1">
+                      {t('createVacancy.generate_hint.subTitle')}
+                    </p>
+                  </PopoverContent>
+                </Popover>
               )}
             </div>
             {touched.url && urlIssue?.message ? <ErrorLayout msg={urlIssue?.message} /> : null}
@@ -222,8 +280,10 @@ export default function AddVacancyModal({ open, onClose }: { open: boolean; onCl
 
           {/* Title */}
           <div className="relative">
+            <Type className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
             <Input
               placeholder={t('vacancy_name')}
+              className="pl-10"
               value={title}
               onBlur={() => {
                 setTouched((prev) => ({
@@ -242,10 +302,12 @@ export default function AddVacancyModal({ open, onClose }: { open: boolean; onCl
 
           {/* Multi-skill input */}
           <div className="relative">
-            <div className="flex gap-2 mb-2">
+            <div className="flex gap-2 mb-2 relative">
+              <ListChecks className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
               <Input
                 placeholder={t('enter_skills')}
                 value={inputSkill}
+                className="pl-10"
                 onBlur={() => {
                   setTouched((prev) => ({
                     ...prev,
@@ -266,7 +328,7 @@ export default function AddVacancyModal({ open, onClose }: { open: boolean; onCl
                 <PlusIcon />
               </Button>
             </div>
-            <div className="flex flex-wrap gap-2 max-h-auto sm:max-h-[150px] overflow-y-auto">
+            <div className="flex flex-wrap gap-2 max-h-auto sm:max-h-[150px] overflow-y-auto mb-[-8px]">
               {skills.map((skill) => (
                 <span
                   key={skill}
@@ -287,13 +349,49 @@ export default function AddVacancyModal({ open, onClose }: { open: boolean; onCl
             ) : null}
           </div>
 
+          {/* Company */}
+          <div className="relative flex items-center gap-2">
+            <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <Input
+              placeholder={t('createVacancy.company_name')}
+              className="pl-10"
+              value={company}
+              onBlur={() => {
+                setTouched((prev) => ({
+                  ...prev,
+                  company: true,
+                }));
+              }}
+              onChange={(e) => {
+                setCompany(e.target.value);
+              }}
+            />
+            <Popover>
+              <PopoverTrigger asChild>
+                <button
+                  type="button"
+                  className="cursor-pointer p-1.5 rounded-sm bg-gray-50 hover:bg-gray-100 text-gray-600 hover:text-gray-800 shadow-sm transition-colors duration-200"
+                >
+                  <Info className="w-5 h-5" />
+                </button>
+              </PopoverTrigger>
+              <PopoverContent>
+                <p className="text-sm text-gray-600 mt-1">{t('company_name_hint')}</p>
+              </PopoverContent>
+            </Popover>
+            {touched.company && companyIssue?.message ? (
+              <ErrorLayout msg={companyIssue?.message} />
+            ) : null}
+          </div>
+
           {/* Lang_code */}
-          <LanguageSelect value={langCode} onChange={setLangCode} className="mt-[-2px]" />
+          <LanguageSelect value={langCode} onChange={setLangCode} />
         </div>
         {/* on some mobile devices bottom of footer not visible, so adding mb-4 */}
         <DialogFooter className="mt-4 mb-4 sm:mb-0">
           <Button onClick={closeModal} variant="outline">
-            {t('cancel')}
+            <X />
+            <span className="text-left">{t('cancel')}</span>
           </Button>
           <Button
             onClick={() => {
@@ -302,11 +400,12 @@ export default function AddVacancyModal({ open, onClose }: { open: boolean; onCl
                 title,
                 skills: skills.length > 0 ? skills : [inputSkill],
                 url,
+                company,
               }).then((e) => (!e.error ? closeModal() : null));
             }}
             disabled={!isValid}
           >
-            {vacancyCreationLoading ? <Loader2Icon className="animate-spin" /> : null}
+            {vacancyCreationLoading ? <Loader2Icon className="animate-spin" /> : <Check />}
             {t('save')}
           </Button>
         </DialogFooter>

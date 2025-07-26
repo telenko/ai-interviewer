@@ -45,6 +45,11 @@ def analyze_vacancy(vacancy: Vacancy) -> Optional[AnalyzeVacancyOutput]:
                     f"Set question_type 'coding' only for programming vacancies."
                     f"Set 'prog_lang_code' flag only for 'coding' questions."
                     + (f"Use language {vacancy.lang_code}" if vacancy.lang_code else "")
+                    + (
+                        f"Adapt questions to company {vacancy.company}. "
+                        if vacancy.company and vacancy.company.lower() != "none"
+                        else ""
+                    )
                 ),
             }
         ],
