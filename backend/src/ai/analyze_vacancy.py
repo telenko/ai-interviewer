@@ -40,16 +40,18 @@ def analyze_vacancy(vacancy: Vacancy) -> Optional[AnalyzeVacancyOutput]:
             {
                 "role": "user",
                 "content": (
-                    f"Make questions for interview for vacancy with title: {vacancy.title}, with such skills: {', '.join(vacancy.skills)}."
-                    f"Return maximum {QUESTIONS_MAX_AMOUNT} questions."
-                    f"Set question_type 'coding' only for programming vacancies."
-                    f"Set 'prog_lang_code' flag only for 'coding' questions."
-                    + (f"Use language {vacancy.lang_code}" if vacancy.lang_code else "")
+                    f"Generate up to {QUESTIONS_MAX_AMOUNT} interview questions for vacancy '{vacancy.title}' "
+                    f"with skills: {', '.join(vacancy.skills)}. "
+                    + (f"Language: {vacancy.lang_code}. " if vacancy.lang_code else "")
                     + (
-                        f"Adapt questions to company {vacancy.company}. "
+                        f"Adapt to company {vacancy.company} (e.g., for IBM add system design for software engineers). "
                         if vacancy.company and vacancy.company.lower() != "none"
                         else ""
                     )
+                    + f"If the role is technical/programming, include {QUESTIONS_MAX_AMOUNT/10} algorithmic/coding tasks (LeetCode style)"
+                    + f" plus {QUESTIONS_MAX_AMOUNT/5} coding tasks based on required skills (f.e. React, Node, etc), "
+                    "and set question_type='coding' with 'prog_lang_code'. "
+                    "Add extra relevant topics inferred from the role and skills."
                 ),
             }
         ],
