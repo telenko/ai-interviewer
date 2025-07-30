@@ -33,8 +33,21 @@ export const WelcomePage = () => {
         </div>
       </div>
 
+      <div
+        className="mt-10 p-1 sm:p-6 space-y-4 rounded-xl overflow-hidden w-full sm:w-[600px]"
+        style={{ aspectRatio: '16 / 9' }}
+      >
+        <iframe
+          className="w-full h-full"
+          src="https://www.youtube.com/embed/93ko_fFy9ts"
+          title="ApplyMatch demo"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+        ></iframe>
+      </div>
+
       <footer className="mt-20 text-xs text-muted-foreground text-center">
-        © {new Date().getFullYear()} AI Interview Assistant
+        © {new Date().getFullYear()} ApplyMatch - AI Interview Assistant
       </footer>
     </div>
   );
