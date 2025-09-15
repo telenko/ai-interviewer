@@ -1,7 +1,7 @@
 from typing import Annotated, List, Optional
 from pydantic import BaseModel, HttpUrl, StringConstraints, field_validator
 
-from src.config.limits import ANSWER_MAX_LEN, ID_MAX_LEN
+from src.config.limits import ANSWER_MAX_LEN, DESCRIPTION_MAX_LEN, ID_MAX_LEN
 
 
 class CreateVacancyPayload(BaseModel):
@@ -47,4 +47,6 @@ class GetVacanciesPayload(BaseModel):
 
 
 class GenerateVacancyPayload(BaseModel):
-    url: HttpUrl
+    urlOrDescription: Optional[
+        Annotated[str, StringConstraints(max_length=DESCRIPTION_MAX_LEN)]
+    ] = None

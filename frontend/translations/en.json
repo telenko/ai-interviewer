@@ -22,7 +22,7 @@
         "new_vacancy": "New vacancy",
         "add_vacancy": "Add vacancy",
         "lang_code": "Preffered language (code, for example en, es, fr)",
-        "gentle_url_placeh": "Paste vacancy URL :) Will be faster!!",
+        "gentle_url_placeh": "Paste vacancy URL or Job description :) Will be faster!!",
         "generate": "Generate",
         "vacancy_name": "Vacancy name",
         "enter_skills": "Enter skill...",
@@ -37,12 +37,16 @@
                 "skill": "Each skill must be between {{min}} and {{max}} characters long.",
                 "skillsMax": "You can add up to {{max}} skills only.",
                 "skillsMin": "Please add at least {{min}} skills.",
-                "url": "Please enter a valid URL (starting with http:// or https://)."
+                "urlOrDescription": "Please enter a valid URL or description no more then {{max}} characters."
             },
             "company_name": "Company name (optional)",
             "generate_hint": {
                 "title": "We can fill all these fields for you, so you can enjoy using service 🙂.",
-                "subTitle": "Just paste the vacancy link from the browser here and leave us the rest!"
+                "subTitle": "Just paste the vacancy link or job description from the browser here and leave us the rest!"
+            },
+            "generate_descr_hint": {
+                "title": "Wow! New feature here 🙂. Now you also can generate your dream job based on simple text description!",
+                "subTitle": "Just type the details of your dream job here and click generate"
             }
         },
         "company_name_hint": "The company name is only symbolic — it helps create a more realistic mock interview.",

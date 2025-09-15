@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Textarea } from '@/components/ui/textarea';
 import InterviewerApi from '@/services/InterviewerApi';
 import { useAddVacancyMutation } from '@/services/vacancyApi';
 import {
@@ -38,8 +39,10 @@ const ErrorLayout = (props: { msg: string }) => (
   </p>
 );
 
+const urlSchema = z.string().url();
+
 export default function AddVacancyModal({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const [url, setUrl] = useState('');
+  const [urlOrDescription, setUrlOrDescription] = useState('');
   const [title, setTitle] = useState('');
   const [company, setCompany] = useState('');
   const [skills, setSkills] = useState<string[]>([]);
@@ -47,16 +50,20 @@ export default function AddVacancyModal({ open, onClose }: { open: boolean; onCl
   const [loadingFromUrl, setLoadingFromUrl] = useState(false);
   const [langCode, setLangCode] = useState<string>();
   const [addVacancy, { isLoading: vacancyCreationLoading }] = useAddVacancyMutation();
+  const isUrlTyped = useMemo(
+    () => urlSchema.safeParse(urlOrDescription).success,
+    [urlOrDescription],
+  );
   const [touched, setTouched] = useState<{
     title?: boolean;
-    url?: boolean;
+    urlOrDescription?: boolean;
     skills?: boolean;
     company?: boolean;
   }>({});
   const { t } = useTranslation();
 
   const closeModal = useCallback(() => {
-    setUrl('');
+    setUrlOrDescription('');
     setTitle('');
     setSkills([]);
     setLangCode('');
@@ -81,10 +88,10 @@ export default function AddVacancyModal({ open, onClose }: { open: boolean; onCl
           )
           .max(30, t('createVacancy.errors.skillsMax', { max: 30 }))
           .min(1, t('createVacancy.errors.skillsMin', { min: 30 })),
-        url: z.union(
-          [z.url(t('createVacancy.errors.url')), z.literal('')],
-          t('createVacancy.errors.url'),
-        ),
+        urlOrDescription: z
+          .string()
+          .max(3000, t('createVacancy.errors.urlOrDescription', { max: 3000 }))
+          .optional(),
         company: z.union(
           [
             z
@@ -108,10 +115,10 @@ export default function AddVacancyModal({ open, onClose }: { open: boolean; onCl
       validationSchema.safeParse({
         title,
         skills: computedSkills,
-        url,
+        urlOrDescription,
         company,
       }),
-    [url, title, computedSkills, company],
+    [urlOrDescription, title, computedSkills, company],
   );
   const isValid = !validation.error;
 
@@ -120,7 +127,7 @@ export default function AddVacancyModal({ open, onClose }: { open: boolean; onCl
     [validation],
   );
   const urlIssue = useMemo(
-    () => validation?.error?.issues?.find((iss) => iss.path.includes('url')),
+    () => validation?.error?.issues?.find((iss) => iss.path.includes('urlOrDescription')),
     [validation],
   );
   const skillsIssue = useMemo(
@@ -151,14 +158,14 @@ export default function AddVacancyModal({ open, onClose }: { open: boolean; onCl
 
   const onAutofill = async () => {
     setLoadingFromUrl(true);
-    if (!url) {
+    if (!urlOrDescription) {
       return;
     }
     try {
       const response = await InterviewerApi.post('/vacancy-session', {
         operation: 'generate_vacancy',
         payload: {
-          url,
+          urlOrDescription,
         },
       });
       const vacancyCut = response.data.vacancy_cut;
@@ -187,6 +194,8 @@ export default function AddVacancyModal({ open, onClose }: { open: boolean; onCl
     setSkills((prev) => prev.filter((s) => s !== skill));
   };
 
+  const GenerateComponent = isUrlTyped ? Input : Textarea;
+
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && closeModal()}>
       <DialogContent className="w-full h-screen sm:max-h-screen overflow-y-auto max-w-none rounded-none sm:max-w-lg sm:h-auto sm:rounded-xl">
@@ -210,27 +219,28 @@ export default function AddVacancyModal({ open, onClose }: { open: boolean; onCl
           <div className="relative">
             <div className="flex gap-2 relative items-center">
               <Link2 className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-              <Input
+              <GenerateComponent
                 className="text-lg pl-10 py-8 blink-green-border placeholder:text-base pr-15 sm:pr-4"
                 placeholder={t('gentle_url_placeh')}
-                value={url}
+                value={urlOrDescription}
                 onBlur={() => {
                   setTouched((prev) => ({
                     ...prev,
-                    url: true,
+                    urlOrDescription: true,
                   }));
                 }}
                 onChange={(e) => {
-                  setUrl(e.target.value);
+                  setUrlOrDescription(e.target.value);
                 }}
+                rows={3}
               />
-              {!url ? (
+              {!urlOrDescription ? (
                 <>
                   <Button
                     onClick={async () => {
                       try {
                         const clipboardText = await navigator.clipboard.readText();
-                        setUrl(clipboardText);
+                        setUrlOrDescription(clipboardText);
                       } catch {}
                     }}
                     className="absolute right-13 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 transition text-white px-4 py-2 rounded-md md:hidden"
@@ -241,7 +251,7 @@ export default function AddVacancyModal({ open, onClose }: { open: boolean; onCl
                   </Button>
                 </>
               ) : null}
-              {url ? (
+              {urlOrDescription ? (
                 <Button
                   variant="secondary"
                   onClick={onAutofill}
@@ -275,7 +285,9 @@ export default function AddVacancyModal({ open, onClose }: { open: boolean; onCl
                 </Popover>
               )}
             </div>
-            {touched.url && urlIssue?.message ? <ErrorLayout msg={urlIssue?.message} /> : null}
+            {touched.urlOrDescription && urlIssue?.message ? (
+              <ErrorLayout msg={urlIssue?.message} />
+            ) : null}
           </div>
 
           {/* Title */}
@@ -399,7 +411,7 @@ export default function AddVacancyModal({ open, onClose }: { open: boolean; onCl
                 langCode,
                 title,
                 skills: skills.length > 0 ? skills : [inputSkill],
-                url,
+                ...(isUrlTyped ? { url: urlOrDescription } : null),
                 company,
               }).then((e) => (!e.error ? closeModal() : null));
             }}

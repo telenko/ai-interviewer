@@ -17,12 +17,16 @@ class VacancyLLM(BaseModel):
     is_vacancy_looks_real: bool
 
 
-def generate_vacancy(title: str, description: str) -> Optional[VacancyLLM]:
+def generate_vacancy(
+    description: str, title: Optional[str] = None
+) -> Optional[VacancyLLM]:
     client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+    title_block = f"Title: {title}\n\n" if title else ""
 
     prompt = (
         f"Analyze the following document and extract vacancy data.\n\n"
-        f"Title: {title}\n\n"
+        f"{title_block}"
         f"Description: {description}\n\n"
         f"Instructions:\n"
         f"- Extract the role of the job offer and return it in 'title'. Limit it to {TEXT_MAX_LEN} characters.\n"

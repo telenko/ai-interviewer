@@ -22,7 +22,7 @@
         "new_vacancy": "Nowa oferta",
         "add_vacancy": "Dodaj ofertę",
         "lang_code": "Język rozmowy kwalifikacyjnej (kod, np. ua, pl, en)",
-        "gentle_url_placeh": "Wklej URL oferty :) To będzie szybsze!!",
+        "gentle_url_placeh": "Wklej URL lub opis oferty :) To będzie szybsze!!",
         "generate": "Generuj",
         "vacancy_name": "Nazwa oferty",
         "enter_skills": "Wpisz umiejętność...",
@@ -37,12 +37,12 @@
                 "skill": "Każda umiejętność musi mieć od {{min}} do {{max}} znaków.",
                 "skillsMax": "Można dodać maksymalnie {{max}} umiejętności.",
                 "skillsMin": "Dodaj co najmniej {{min}} umiejętność.",
-                "url": "Podaj poprawny link (rozpoczynający się od http:// lub https://)."
+                "urlOrDescription": "Podaj poprawny link lub opis nie więcej niż {{max}} znaków."
             },
             "company_name": "Nazwa firmy (opcjonalnie)",
             "generate_hint": {
                 "title": "Możemy wypełnić te pola za Ciebie, abyś mógł wygodnie korzystać z usługi 🙂.",
-                "subTitle": "Wklej tutaj link do oferty pracy z przeglądarki, a my zajmiemy się resztą!"
+                "subTitle": "Wklej tutaj link do oferty pracy lub opis z przeglądarki, a my zajmiemy się resztą!"
             }
         },
         "company_name_hint": "Nazwa firmy jest jedynie symboliczna — pomaga stworzyć bardziej realistyczną próbę rozmowy kwalifikacyjnej.",
